@@ -1,0 +1,27 @@
+<section class="user-panel">
+  @if (authService.user(); as user) {
+  <h2>Witaj, {{ user.userName }}!</h2>
+  <p>Twój budżet: {{ user.budget | currency:'PLN' }}</p>
+  } @else {
+  <p>Nie jesteś zalogowany.</p>
+  }
+
+  @if (authService.ingredients().length) {
+  <h3 (click)="toggleIngredients()" class="collapsible">
+        <span>Twoje składniki</span>
+    <span class="arrow">{{ showIngredients() ? '▲' : '▼' }}</span>
+  </h3>
+
+  @if (showIngredients()) {
+  <ul>
+    @for (ing of authService.ingredients(); track $index) {
+    <li>{{ ing }}</li>
+    }
+  </ul>
+  }
+  } @else {
+  <p>Brak składników.</p>
+  }
+
+  <button (click)="onLogout()">Wyloguj</button>
+</section>

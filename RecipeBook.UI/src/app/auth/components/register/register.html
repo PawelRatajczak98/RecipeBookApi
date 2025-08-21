@@ -1,0 +1,41 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="stack">
+  @if (authService.successMessage()) {
+    <div class="success">{{ authService.successMessage() }}</div>
+  }
+  
+  @if (authService.errorMessage()) {
+    <div class="error">{{ authService.errorMessage() }}</div>
+  }
+
+  <label>
+    Nazwa użytkownika
+    <input type="text" formControlName="userName" />
+    @if (registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched) {
+      <span class="error">Nazwa użytkownika jest wymagana</span>
+    }
+  </label>
+
+  <label>
+    Email
+    <input type="email" formControlName="email" />
+    @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+      <span class="error">Podaj prawidłowy adres email</span>
+    }
+  </label>
+
+  <label>
+    Hasło (4-16 znaków)
+    <input type="password" formControlName="password" />
+    @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+      <span class="error">Hasło musi mieć 4-16 znaków</span>
+    }
+  </label>
+
+  <button type="submit" [disabled]="registerForm.invalid || authService.isLoading()">
+    @if (authService.isLoading()) {
+      Rejestrowanie...
+    } @else {
+      Zarejestruj
+    }
+  </button>
+</form>

@@ -1,0 +1,29 @@
+.collapsible {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-panel {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+}
+
+.arrow {
+  font-size: 0.9rem;
+}
+
+.user-panel h2 {
+  margin-top: 1;
+}
+
+.user-panel ul {
+  padding-left: 1.2rem;
+}
+
+button {
+  margin-top: 1rem;
+}

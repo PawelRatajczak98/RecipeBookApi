@@ -1,0 +1,65 @@
+<h2>Moje składniki</h2>
+
+@if (errorMessage()) {
+  <div class="error">{{ errorMessage() }}</div>
+}
+
+@if (successMessage()) {
+  <div class="success">{{ successMessage() }}</div>
+}
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <label for="ingredientId">Składnik:</label>
+  <select formControlName="ingredientId" id="ingredientId" (change)="onIngredientSelect()">
+    <option value="">-- wybierz składnik --</option>
+    @for (prod of allIngredients(); track prod.id) {
+      <option [value]="prod.id">{{ prod.name }} ({{ prod.priceFor100g }} zł/100g, {{ prod.unit }})</option>
+    }
+  </select>
+
+  <label for="quantity">Ilość:</label>
+  <input type="number" formControlName="quantity" id="quantity" step="0.1" placeholder="Wpisz ilość" />
+
+  <label for="unit">Jednostka:</label>
+  <input type="text" formControlName="unit" id="unit" readonly />
+
+  <button type="submit" [disabled]="isSubmitting()">Dodaj</button>
+</form>
+
+<hr />
+
+<h3>Twoje składniki:</h3>
+@for (ui of userIngredients(); track ui.ingredientId) {
+  <div class="ingredient-item">
+    <div class="ingredient-info">
+      <strong>{{ ui.ingredientName }}</strong>
+      
+      @if (editingIngredientId() === ui.ingredientId) {
+        <div class="edit-mode">
+          <input 
+            type="number" 
+            [value]="editQuantity()" 
+            #quantityInput
+            (input)="editQuantity.set(+quantityInput.value)"
+            step="0.1"
+            min="0"
+          />
+          <span>{{ ui.unit }}</span>
+          <button (click)="saveEdit(ui.ingredientId)" class="btn btn-save">Zapisz</button>
+          <button (click)="cancelEditing()" class="btn btn-cancel">Anuluj</button>
+        </div>
+      } @else {
+        <span class="quantity">{{ ui.quantity }} {{ ui.unit }}</span>
+      }
+      
+      <span class="price">({{ ui.totalPrice | number:'1.2-2' }} zł)</span>
+    </div>
+    
+    @if (editingIngredientId() !== ui.ingredientId) {
+      <div class="actions">
+        <button (click)="startEditing(ui.ingredientId, ui.quantity)" class="btn btn-edit">Edytuj</button>
+        <button (click)="deleteUserIngredient(ui.ingredientId)" class="btn btn-delete">Usuń</button>
+      </div>
+    }
+  </div>
+}

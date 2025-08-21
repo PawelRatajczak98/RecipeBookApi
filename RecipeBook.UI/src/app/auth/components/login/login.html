@@ -1,0 +1,27 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="stack">
+  <label>
+    Nazwa użytkownika
+    <input type="text" formControlName="username" />
+  </label>
+
+  <label>
+    Hasło
+    <input type="password" formControlName="password" />
+  </label>
+
+  <button type="submit" [disabled]="authService.isLoading()">
+    {{ authService.isLoading() ? 'Logowanie…' : 'Zaloguj' }}
+  </button>
+
+  <button type="button" (click)="onLogout()">Wyloguj</button>
+
+  @if (authService.errorMessage(); as err) {
+    <p class="error">{{ err }}</p>
+  }
+
+  @if (authService.user(); as u) {
+    <p>Zalogowany jako: <strong>{{ u.userName }}</strong></p>
+  }
+
+
+</form>

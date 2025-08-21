@@ -1,0 +1,33 @@
+<!-- src/app/app.component.html -->
+<nav class="topnav">
+  <a routerLink="/recipes" routerLinkActive="active" [routerLinkActiveOptions]="routerLinkOptions()">Przepisy</a>
+  
+  @if (userInfo.currentUser()) {
+    <a routerLink="/recipes/create" routerLinkActive="active">Dodaj przepis</a>
+    <a routerLink="/user/ingredients" routerLinkActive="active">Moje składniki</a>
+  }
+
+  <span class="spacer"></span>
+
+  @if (userInfo.currentUser(); as u) {
+    <span class="hello">Witaj, {{ u.userName }}</span>
+    <!-- otwórz/zamknij panel boczny w named outlet "side" -->
+    <a [routerLink]="[{ outlets: { side: ['user'] } }]" class="side-link">Panel</a>
+    <a [routerLink]="[{ outlets: { side: null } }]" class="side-link">Zamknij panel</a>
+  } @else {
+    <button class="auth-btn login-btn" (click)="showLogin()">Zaloguj</button>
+    <button class="auth-btn register-btn" (click)="showRegister()">Zarejestruj</button>
+  }
+</nav>
+
+<!-- layout: main + opcjonalny side -->
+<div class="layout">
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+  <aside>
+    <router-outlet name="side"></router-outlet>
+  </aside>
+</div>
+
+<app-auth-modal #authModal (authSuccess)="onAuthSuccess()"></app-auth-modal>

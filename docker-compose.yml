@@ -1,0 +1,21 @@
+services:
+  api:
+    image: ${DOCKER_REGISTRY-}api
+    build:
+      context: .
+      dockerfile: RecipeBook.Api/Dockerfile
+    depends_on:
+      - mssql
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: recipebook.database
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./data:/var/opt/mssql/data
+      - ./backup:/var/opt/mssql/backup
+
