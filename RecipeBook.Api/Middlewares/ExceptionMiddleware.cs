@@ -28,15 +28,16 @@ namespace RecipeBook.Api.Middlewares
                 {
                     statusCode = apiEx.StatusCode;
                     response = env.IsDevelopment()
-                        ? new ApiException(apiEx.StatusCode, apiEx.Message, apiEx.Details ?? ex.StackTrace)
-                        : apiEx;
+                        ? new ApiException(statusCode, apiEx.Message, apiEx.Details ?? ex.StackTrace)
+                        : new ApiException(statusCode, apiEx.Message);
                 }
                 else
                 {
                     statusCode = (int)HttpStatusCode.InternalServerError;
+
                     response = env.IsDevelopment()
                         ? new ApiException(statusCode, ex.Message, ex.StackTrace)
-                        : new ApiException(statusCode, "An unexpected error occurred.", null);
+                        : new ApiException(statusCode, "An unexpected error occurred.");
                 }
 
                 context.Response.StatusCode = statusCode;

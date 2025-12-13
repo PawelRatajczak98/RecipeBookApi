@@ -4,18 +4,21 @@ services:
     build:
       context: .
       dockerfile: RecipeBook.Api/Dockerfile
+    ports:
+      - "7090:7090"
     depends_on:
       - mssql
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=mssql;Database=RecipeBookDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: recipebook.database
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=YourStrong@Passw0rd
+      - MSSQL_SA_PASSWORD=YourStrong@Passw0rd
     ports:
       - "1433:1433"
     volumes:
       - ./data:/var/opt/mssql/data
       - ./backup:/var/opt/mssql/backup
-
