@@ -8,6 +8,7 @@ services:
       - "7090:7090"
     depends_on:
       - mssql
+    restart: on-failure
     environment:
       - ConnectionStrings__DefaultConnection=Server=mssql;Database=RecipeBookDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;
 
