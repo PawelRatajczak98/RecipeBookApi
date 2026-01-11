@@ -7,9 +7,10 @@ services:
     ports:
       - "7090:7090"
     depends_on:
-      - mssql
+      mssql:
+       condition: service_healthy
     environment:
-      - ConnectionStrings__DefaultConnection=Server=mssql;Database=RecipeBookDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;
+      - ConnectionStrings__DockerConnection=Server=mssql;Database=RecipeBookDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -22,3 +23,9 @@ services:
     volumes:
       - ./data:/var/opt/mssql/data
       - ./backup:/var/opt/mssql/backup
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'YourStrong@Passw0rd' -C -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+      timeout: 3s
