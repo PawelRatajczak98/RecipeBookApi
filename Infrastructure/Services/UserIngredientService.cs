@@ -34,10 +34,7 @@ namespace Infrastructure.Services
                 .Where(ui => ui.UserId == userId)
                 .Include(ui => ui.Ingredient)
                 .ToListAsync();
-            if (userIngredients.Count == 0)
-            {
-                throw new ValidationException("You have not any products.");
-            }       
+                  
             var userIngredientsDto = UserIngredientMapper.MapToDtoList(userIngredients);
             return userIngredientsDto;
         }

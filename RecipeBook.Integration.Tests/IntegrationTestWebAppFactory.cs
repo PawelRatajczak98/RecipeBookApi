@@ -1,6 +1,6 @@
 ﻿using Infrastructure.Persistence;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
@@ -39,13 +40,25 @@ namespace RecipeBook.Integration.Tests
                 {
                     services.Remove(derscriptor);
                 }
+                // 2. STWÓRZ CONNECTION STRINGA DO KONKRETNEJ BAZY
+                // Testcontainers daje string do 'master'. Zmieniamy to.
+                var connectionStringBuilder = new DbConnectionStringBuilder();
+                connectionStringBuilder.ConnectionString = _dbContainer.GetConnectionString();
+                connectionStringBuilder["Initial Catalog"] = "RecipeBookDb"; // Nazwa bazy, której oczekujesz
 
+                var connectionString = connectionStringBuilder.ConnectionString;
+
+                // 3. ZAREJESTRUJ KONTEKST NA NOWO (DO KONTENERA)
                 services.AddDbContext<AppDbContext>(options =>
+                {
+                    options.UseSqlServer(connectionString);
+                });
+                /*services.AddDbContext<AppDbContext>(options =>
                 {
                     options.UseSqlServer(_dbContainer.GetConnectionString(), x => x.MigrationsAssembly("Infrastructure"));
                     ConnectionStringForTests = _dbContainer.GetConnectionString();
                 });
-
+                */
                 using var scope = services.BuildServiceProvider().CreateScope();
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Domain.Entities.AppUser>>();
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Domain.Entities.AppRole>>();
