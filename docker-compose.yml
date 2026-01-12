@@ -1,16 +1,26 @@
 services:
   api:
     image: ${DOCKER_REGISTRY-}api
+    container_name: api
     build:
       context: .
       dockerfile: RecipeBook.Api/Dockerfile
     ports:
       - "7090:7090"
+      - "5093:5093"
     depends_on:
       mssql:
        condition: service_healthy
     environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=5093
+      - ASPNETCORE_HTTPS_PORTS=7090
       - ConnectionStrings__DockerConnection=Server=mssql;Database=RecipeBookDb;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
