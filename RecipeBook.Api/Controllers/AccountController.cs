@@ -73,12 +73,19 @@ namespace Api.Controllers
         [Authorize]
         public async Task <IActionResult> GetUserInfo()
         {
-            var userDto = await _userContextService.GetUserDto();
-            if (userDto == null)
+            try
             {
-                return BadRequest();
+                var userDto = await _userContextService.GetUserDto();
+                return Ok(userDto);
             }
-            return Ok(userDto);
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message); 
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message); 
+            }
         }
         
     }

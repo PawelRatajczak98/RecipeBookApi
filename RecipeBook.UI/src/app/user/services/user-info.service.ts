@@ -15,4 +15,7 @@ export class UserInfoService{
     public clearUser(): void {
         this.currentUser.set(null);
     }
+    clear() {
+    this.currentUser.set(null);
+  }
 }

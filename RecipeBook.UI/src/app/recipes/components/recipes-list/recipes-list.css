@@ -1,23 +1,29 @@
 :host {
   display: block;
-  font-family: sans-serif;
+  color: #2E2E2E;
 }
 
+/* ================== GŁÓWNY KONTENER ================== */
 .list-container {
-  max-width: 1200px;
-  margin: 1rem auto;
-  padding: 1rem;
+  padding: 1.5rem;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
 }
 
+.list-container h1 {
+  color: #2D6A4F;
+}
+
+/* ================== PANEL KONTROLI ================== */
 .controls {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   margin-bottom: 1.5rem;
   padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: #fafafa;
+  background: #F1FAF4;
+  border: 1px solid #B7E4C7;
+  border-radius: 12px;
 }
 
 .search-row {
@@ -32,9 +38,9 @@
   align-items: center;
   gap: 1rem;
   padding: 0.75rem;
-  background: #f5f5f5;
-  border-radius: 3px;
-  border: 1px solid #ddd;
+  background: #E5F5EC;
+  border-radius: 10px;
+  border: 1px solid #B7E4C7;
 }
 
 .actions-row {
@@ -43,18 +49,22 @@
   flex-wrap: wrap;
 }
 
+/* ================== INPUTY ================== */
 .controls input,
 .controls select {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 3px;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #B7E4C7;
+  border-radius: 10px;
   font-size: 0.9rem;
+  background: #F1FAF4;
+  color: #2E2E2E;
 }
 
 .controls input:focus,
 .controls select:focus {
   outline: none;
-  border-color: #666;
+  border-color: #52B788;
+  box-shadow: 0 0 0 2px rgba(82,183,136,0.25);
 }
 
 .budget-controls {
@@ -77,97 +87,114 @@
 }
 
 .budget-info {
-  font-weight: 500;
-  color: #333;
+  font-weight: 600;
+  color: #2D6A4F;
   font-size: 0.85rem;
   white-space: nowrap;
 }
 
+/* ================== PRZYCISKI ================== */
 .controls button {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 3px;
+  padding: 0.55rem 0.9rem;
+  border-radius: 10px;
   font-size: 0.85rem;
   cursor: pointer;
   white-space: nowrap;
-  background: white;
-  color: #333;
-}
-
-.controls button:hover {
-  background: #f0f0f0;
+  border: 1px solid transparent;
+  font-weight: 600;
 }
 
 .btn-primary {
-  background: #007bff;
+  background: #52B788;
   color: white;
-  border-color: #007bff;
+  border-color: #52B788;
 }
 
 .btn-primary:hover {
-  background: #0056b3;
-  border-color: #0056b3;
+  background: #40916C;
+  border-color: #40916C;
 }
 
 .btn-secondary {
-  background: #28a745;
+  background: #52B788;
   color: white;
-  border-color: #28a745;
+  border-color: #52B788;
 }
 
 .btn-secondary:hover {
-  background: #1e7e34;
-  border-color: #1e7e34;
+  background: #40916C;
+  border-color: #40916C;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid #52B788;
+  color: #52B788;
 }
 
 .btn-outline:hover {
-  background: #f0f0f0;
+  background: #52B788;
+  color: white;
 }
 
+/* ================== TABELA ================== */
 table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 1.5rem;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 th, td {
-  border: 1px solid #ddd;
-  padding: 0.5rem;
+  padding: 0.75rem;
   text-align: left;
   vertical-align: top;
 }
 
+th {
+  background-color: #2D6A4F;
+  color: white;
+}
+
+td {
+  border-bottom: 1px solid #E5F5EC;
+}
+
+tbody tr:hover {
+  background: #F1FAF4;
+}
+
+/* szerokości kolumn */
+th:nth-child(1), td:nth-child(1) { width: 20%; }
+th:nth-child(2), td:nth-child(2) { width: 30%; }
+th:nth-child(3), td:nth-child(3) { width: 10%; }
+th:nth-child(4), td:nth-child(4) { width: 40%; }
+
+/* ================== LINKI ================== */
+.recipe-link {
+  color: #2D6A4F;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.recipe-link:hover {
+  color: #40916C;
+  text-decoration: underline;
+}
+
+/* ================== SKŁADNIKI ================== */
 td ul {
   margin: 0;
   padding-left: 1rem;
-  list-style-type: disc;
 }
 
 td ul li {
   margin-bottom: 0.25rem;
+  color: #40916C;
 }
 
-th:nth-child(1), td:nth-child(1) { width: 20%; } /* Nazwa */
-th:nth-child(2), td:nth-child(2) { width: 30%; } /* Opis */
-th:nth-child(3), td:nth-child(3) { width: 10%; } /* Cena */
-th:nth-child(4), td:nth-child(4) { width: 40%; } /* Produkty */
-
-.recipe-link {
-  color: #3b82f6;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.recipe-link:hover {
-  color: #2563eb;
-  text-decoration: underline;
-}
-
-th {
-  background-color: #f8f9fa;
-}
-
+/* ================== PAGINACJA ================== */
 .pagination {
   display: flex;
   justify-content: center;
@@ -177,12 +204,13 @@ th {
 }
 
 .pagination button {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid #52B788;
   background-color: #fff;
+  color: #52B788;
   cursor: pointer;
-  transition: background-color 0.2s;
-  border-radius: 4px;
+  font-weight: 600;
 }
 
 .pagination button:disabled {
@@ -191,17 +219,22 @@ th {
 }
 
 .pagination button:not(:disabled):hover {
-  background-color: #f0f0f0;
+  background: #E5F5EC;
+  color: #2D6A4F;
 }
 
 .pagination button.active {
-  background-color: #007bff;
+  background: #52B788;
   color: white;
-  border-color: #007bff;
-  font-weight: bold;
+  border-color: #52B788;
 }
 
+/* ================== MOBILE ================== */
 @media (max-width: 768px) {
+  .list-container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
   .controls {
     padding: 0.75rem;
   }
@@ -239,4 +272,9 @@ th {
   .budget-info {
     text-align: center;
   }
+}
+
+.steps {
+  white-space: pre-line; /* zachowuje złamania linii (\n) */
+  line-height: 1.5;
 }

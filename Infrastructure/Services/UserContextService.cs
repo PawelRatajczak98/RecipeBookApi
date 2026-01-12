@@ -55,6 +55,11 @@ namespace Infrastructure.Services
         {
             var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var user = await _dbContext.Users.FindAsync(userId);
+            if (user == null)
+            {
+                throw new DirectoryNotFoundException("User not found");
+            }
+            
             return new UserDto
             {
                 Budget = user.Budget,

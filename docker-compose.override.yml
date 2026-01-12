@@ -5,7 +5,7 @@ services:
       - ASPNETCORE_HTTP_PORTS=5093
       - ASPNETCORE_HTTPS_PORTS=7090
     ports:
-      - "7091:7090"
+      - "7090:7090"
       - "5094:5093"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro

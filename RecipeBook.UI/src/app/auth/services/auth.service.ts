@@ -15,9 +15,9 @@ export class AuthService {
   private userIngredientsService = inject(UserIngredientsService);
 
   private readonly API = {
-    login: 'https://localhost:7091/api/account/login',
-    register: 'https://localhost:7091/api/account/register',
-    me: 'https://localhost:7091/api/account/login/me',
+    login: 'https://localhost:7090/api/account/login',
+    register: 'https://localhost:7090/api/account/register',
+    me: 'https://localhost:7090/api/account/login/me',
   };
 
   readonly isLoading = signal(false);

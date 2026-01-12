@@ -49,8 +49,10 @@ namespace Infrastructure.Persistence;
     public static async Task SeedData(DbContext context)
     {
         var connection = context.Database.GetDbConnection();
+       
+        var basePath = AppContext.BaseDirectory;
 
-        var path = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "Infrastructure", "Persistence", "SeedDataInserts.sql"));
+        var path = Path.Combine(basePath, "Persistence", "SeedDataInserts.sql");
         if (!File.Exists(path))
             throw new FileNotFoundException($"Script file not found at {path}");
         var sqlScript = await File.ReadAllTextAsync(path);

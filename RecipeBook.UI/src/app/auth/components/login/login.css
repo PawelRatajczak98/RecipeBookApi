@@ -1,50 +1,94 @@
-.stack {
+:host {
+  display: block;
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Montserrat', sans-serif;
 }
 
+/* Formularz */
+form.stack {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Label + input */
 label {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  font-weight: 500;
+  font-weight: 600;
+  color: #2D6A4F;
+  gap: 6px;
 }
 
 input {
-  padding: 0.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
-  font-size: 1rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid #B7E4C7;
+  background: #F1FAF4;
+  font-size: 0.95rem;
 }
 
 input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #52B788;
+  box-shadow: 0 0 0 2px rgba(82,183,136,0.25);
 }
 
+/* Przyciski */
 button {
-  padding: 0.75rem 1rem;
+  padding: 0.7rem;
+  border-radius: 10px;
   border: none;
-  border-radius: 0.375rem;
-  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: 0.2s ease;
 }
 
+/* Zaloguj */
+button[type="submit"] {
+  background: #52B788;
+  color: white;
+}
 
+button[type="submit"]:hover:not(:disabled) {
+  background: #40916C;
+}
+
+button[type="submit"]:disabled {
+  background: #B7E4C7;
+  cursor: not-allowed;
+}
+
+/* Wyloguj */
 button[type="button"] {
-  background-color: #f3f4f6;
-  color: #374151;
+  background: transparent;
+  border: 2px solid #52B788;
+  color: #52B788;
 }
 
 button[type="button"]:hover {
-  background-color: #e5e7eb;
+  background: #52B788;
+  color: white;
 }
 
+/* Error */
 .error {
-  color: #dc2626;
-  font-size: 0.875rem;
-  margin: 0;
+  background: #FFE3E3;
+  color: #B00020;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+/* Zalogowany użytkownik */
+p {
+  text-align: center;
+  color: #2D6A4F;
+  font-weight: 600;
 }

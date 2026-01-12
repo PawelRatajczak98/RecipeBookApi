@@ -1,29 +1,79 @@
-.collapsible {
-  cursor: pointer;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.user-panel {
+  background: white;
+  border-radius: 18px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  color: #2E2E2E;
 }
 
-.user-panel {
-  padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
+.user-panel h2 {
+  color: #2D6A4F;
+  font-size: 1.4rem;
+  margin-bottom: 0.25rem;
+}
+
+.user-panel p {
+  color: #40916C;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Sekcja składników */
+.collapsible {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #E5F5EC;
+  color: #2D6A4F;
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  margin-top: 1rem;
+  transition: background 0.2s;
+}
+
+.collapsible:hover {
+  background: #D8F3DC;
 }
 
 .arrow {
   font-size: 0.9rem;
 }
 
-.user-panel h2 {
-  margin-top: 1;
-}
-
+/* Lista składników */
 .user-panel ul {
-  padding-left: 1.2rem;
+  list-style: none;
+  padding: 0;
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-button {
-  margin-top: 1rem;
+.user-panel li {
+  background: #F1FAF4;
+  border: 1px solid #B7E4C7;
+  border-radius: 10px;
+  padding: 8px 12px;
+  color: #2D6A4F;
+  font-weight: 600;
+}
+
+/* Przycisk wylogowania */
+.user-panel button {
+  margin-top: 1.5rem;
+  width: 100%;
+  padding: 0.7rem;
+  border-radius: 10px;
+  border: none;
+  background: #EF4444;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.user-panel button:hover {
+  background: #DC2626;
 }

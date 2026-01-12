@@ -1,0 +1,82 @@
+:host {
+  display: block;
+  color: #2E2E2E;
+}
+
+/* ====== GŁÓWNY KONTENER 404 ====== */
+.not-found-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F1FAF4;
+  padding: 1.5rem;
+}
+
+/* ====== KARTA 404 ====== */
+.not-found-content {
+  background: #ffffff;
+  padding: 3rem 3.5rem;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  border: 1px solid #B7E4C7;
+  max-width: 480px;
+  width: 100%;
+}
+
+/* ====== 404 ====== */
+.not-found-content h1 {
+  font-size: 5rem;
+  font-weight: 800;
+  margin: 0;
+  color: #2D6A4F;
+  line-height: 1;
+}
+
+/* ====== Page Not Found ====== */
+.not-found-content h2 {
+  font-size: 1.6rem;
+  margin: 1rem 0 0.75rem;
+  color: #40916C;
+}
+
+/* ====== Opis ====== */
+.not-found-content p {
+  font-size: 0.95rem;
+  color: #2E2E2E;
+  margin-bottom: 2rem;
+}
+
+/* ====== PRZYCISK POWROTU ====== */
+.not-found-content a {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  background: #52B788;
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid #52B788;
+  transition: 0.2s ease;
+}
+
+.not-found-content a:hover {
+  background: #40916C;
+  border-color: #40916C;
+}
+
+/* ====== MOBILE ====== */
+@media (max-width: 768px) {
+  .not-found-content {
+    padding: 2rem 1.5rem;
+  }
+
+  .not-found-content h1 {
+    font-size: 3.8rem;
+  }
+
+  .not-found-content h2 {
+    font-size: 1.3rem;
+  }
+}

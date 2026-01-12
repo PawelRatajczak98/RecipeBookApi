@@ -1,317 +1,157 @@
-.recipe-details {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  min-height: 100vh;
+:host {
+  display: block;
+  background: #F1FAF4;
+  font-family: 'Montserrat', sans-serif;
+  color: #2E2E2E;
 }
 
-.recipe-header {
+/* =================== GŁÓWNY KONTENER =================== */
+.recipe-details {
+  padding: 0px;
+   height: 100vh;
+  margin: 0 auto;
   background: white;
-  border-radius: 16px;
-  padding: 2.5rem;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  padding: 2rem;
+}
+
+/* =================== HEADER =================== */
+.recipe-header {
+  border-bottom: 2px solid #E5F5EC;
+  padding-bottom: 1.5rem;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e2e8f0;
 }
 
 .recipe-header h1 {
-  color: #1e293b;
-  margin: 0 0 1.5rem 0;
-  font-size: 3rem;
-  font-weight: 700;
-  line-height: 1.2;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #2D6A4F;
+  font-size: 2.4rem;
+  margin-bottom: 0.5rem;
 }
 
 .recipe-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  font-size: 0.95rem;
 }
 
 .recipe-stats span {
-  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
-  font-size: 0.95rem;
-  color: #475569;
-  font-weight: 500;
-  border: 1px solid #cbd5e1;
-  transition: all 0.3s ease;
-  text-align: center;
-}
-
-.recipe-stats span:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.total-cost {
-  background: linear-gradient(135deg, #dcfce7, #bbf7d0) !important;
-  color: #166534 !important;
+  background: #E5F5EC;
+  color: #2D6A4F;
+  padding: 6px 12px;
+  border-radius: 999px;
   font-weight: 600;
-  border-color: #86efac !important;
 }
 
-.likes-count {
-  background: linear-gradient(135deg, #fef3c7, #fde68a) !important;
-  color: #92400e !important;
-  border-color: #f59e0b !important;
-}
-
-.comments-count {
-  background: linear-gradient(135deg, #dbeafe, #bfdbfe) !important;
-  color: #1e40af !important;
-  border-color: #60a5fa !important;
-}
-
+/* =================== SEKCJE =================== */
 section {
-  margin-bottom: 2rem;
-  background: white;
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e2e8f0;
-  transition: all 0.3s ease;
-}
-
-section:hover {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
+  margin-bottom: 2.5rem;
 }
 
 section h2 {
-  color: #1e293b;
-  border-bottom: 3px solid #e2e8f0;
-  padding-bottom: 0.75rem;
-  margin: 0 0 1.5rem 0;
-  font-size: 1.75rem;
-  font-weight: 600;
-  position: relative;
+  color: #2D6A4F;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
 }
 
-section h2::after {
-  content: '';
-  position: absolute;
-  bottom: -3px;
-  left: 0;
-  width: 60px;
-  height: 3px;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-  border-radius: 2px;
-}
-
+/* =================== OPIS =================== */
 .recipe-description p {
-  line-height: 1.8;
-  color: #475569;
-  font-size: 1.125rem;
-  background: #f8fafc;
-  padding: 1.5rem;
-  border-radius: 12px;
-  border-left: 4px solid #3b82f6;
-  margin: 0;
-  font-style: italic;
+  line-height: 1.6;
+  color: #2E2E2E;
 }
 
+/* =================== SKŁADNIKI =================== */
 .ingredients-list {
   list-style: none;
   padding: 0;
-  display: grid;
-  gap: 0.75rem;
+  margin: 0;
 }
 
 .ingredient-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.5rem;
-  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  transition: all 0.3s ease;
-}
-
-.ingredient-item:hover {
-  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
-  transform: translateX(4px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #F1FAF4;
+  border: 1px solid #B7E4C7;
+  margin-bottom: 10px;
 }
 
 .ingredient-name {
   font-weight: 600;
-  color: #1e293b;
-  font-size: 1.05rem;
+  color: #2D6A4F;
 }
 
 .ingredient-quantity {
-  color: #475569;
-  font-size: 0.95rem;
+  color: #40916C;
   font-weight: 500;
-  background: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  border: 1px solid #cbd5e1;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
+/* =================== POLUBIENIA =================== */
 .likes-list {
   list-style: none;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 10px;
 }
 
 .like-item {
-  background: linear-gradient(135deg, #fef3c7, #fde68a);
-  color: #92400e;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  border: 1px solid #f59e0b;
-  transition: all 0.3s ease;
-  cursor: default;
+  background: #F4D35E;
+  color: #2E2E2E;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 600;
 }
 
-.like-item:hover {
-  background: linear-gradient(135deg, #fde68a, #facc15);
-  transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
-}
-
+/* =================== KOMENTARZE =================== */
 .comments-list {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .comment-item {
-  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-  border-radius: 16px;
-  padding: 1.5rem;
-  border-left: 4px solid #3b82f6;
-  border: 1px solid #e2e8f0;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.comment-item::before {
-  content: '💬';
-  position: absolute;
-  top: -8px;
-  right: 1rem;
-  background: white;
-  padding: 0.25rem 0.5rem;
+  background: #F1FAF4;
+  border: 1px solid #B7E4C7;
   border-radius: 12px;
-  font-size: 1.2rem;
-  border: 1px solid #e2e8f0;
-}
-
-.comment-item:hover {
-  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
-  transform: translateX(4px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
 }
 
 .comment-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 0.5rem;
 }
 
 .comment-author {
-  font-weight: 600;
-  color: #1e293b;
-  font-size: 1.05rem;
+  color: #2D6A4F;
+  font-weight: 700;
 }
 
 .comment-date {
-  font-size: 0.85rem;
-  color: #64748b;
-  background: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  border: 1px solid #cbd5e1;
+  font-size: 0.8rem;
+  color: #40916C;
 }
 
 .comment-content {
-  margin: 0;
-  line-height: 1.7;
-  color: #475569;
-  font-size: 1rem;
+  line-height: 1.5;
 }
 
+/* =================== BRAK DANYCH =================== */
 .no-data {
-  color: #64748b;
+  color: #40916C;
   font-style: italic;
-  text-align: center;
-  padding: 2rem;
-  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-  border-radius: 12px;
-  border: 2px dashed #cbd5e1;
-  font-size: 1.05rem;
+  background: #E5F5EC;
+  padding: 12px;
+  border-radius: 10px;
 }
 
+/* =================== ŁADOWANIE =================== */
 .recipe-loading {
   text-align: center;
   padding: 4rem;
-  color: #475569;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
-.recipe-loading p {
-  font-size: 1.25rem;
-  margin: 0;
-  font-weight: 500;
-}
-
-@media (max-width: 768px) {
-  .recipe-details {
-    padding: 1rem;
-  }
-  
-  .recipe-header {
-    padding: 1.5rem;
-  }
-  
-  .recipe-header h1 {
-    font-size: 2.25rem;
-  }
-  
-  .recipe-stats {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-  
-  .ingredient-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-    padding: 1rem;
-  }
-  
-  .comment-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-  
-  section {
-    padding: 1.5rem;
-  }
-  
-  .likes-list {
-    gap: 0.5rem;
-  }
+  color: #2D6A4F;
+  font-weight: 600;
 }

@@ -3,7 +3,7 @@
     <header class="recipe-header">
       <h1>{{ r.name }}</h1>
       <div class="recipe-stats">
-        <span class="total-cost">Koszt całkowity: {{ r.totalCost | currency:'PLN':'symbol':'1.2-2' }}</span>
+        <span class="total-cost">Koszt całkowity: {{ r.totalCost | currency:'PLN ':'symbol':'1.2-2' }}</span>
         <span class="likes-count">Polubień: {{ likesCount() }}</span>
         <span class="comments-count">Komentarzy: {{ commentsCount() }}</span>
       </div>

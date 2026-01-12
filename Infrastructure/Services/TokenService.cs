@@ -38,7 +38,11 @@ namespace Infrastructure.Services
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddMinutes(15),
-                SigningCredentials = creds
+                SigningCredentials = creds,
+                //
+                Issuer = config["Jwt:Issuer"],
+                Audience = config["Jwt:Audience"]
+
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

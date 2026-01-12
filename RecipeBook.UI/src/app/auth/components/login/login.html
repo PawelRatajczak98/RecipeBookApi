@@ -13,8 +13,6 @@
     {{ authService.isLoading() ? 'Logowanie…' : 'Zaloguj' }}
   </button>
 
-  <button type="button" (click)="onLogout()">Wyloguj</button>
-
   @if (authService.errorMessage(); as err) {
     <p class="error">{{ err }}</p>
   }
@@ -22,6 +20,4 @@
   @if (authService.user(); as u) {
     <p>Zalogowany jako: <strong>{{ u.userName }}</strong></p>
   }
-
-
 </form>

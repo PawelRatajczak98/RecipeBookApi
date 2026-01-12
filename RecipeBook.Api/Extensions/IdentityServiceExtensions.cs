@@ -33,10 +33,12 @@ namespace Api.Extensions
                     var tokenKey = config["Jwt:Key"] ?? throw new Exception("TokenKey not found");
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
+                        ValidIssuer = config["Jwt:Issuer"] ?? throw new Exception("Issuer not found"),
+                        ValidAudience = config["Jwt:Audience"] ?? throw new Exception("Audience not found"),
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
                         NameClaimType = ClaimTypes.NameIdentifier,
                         RoleClaimType = ClaimTypes.Role
