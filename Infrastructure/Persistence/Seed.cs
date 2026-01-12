@@ -49,19 +49,29 @@ namespace Infrastructure.Persistence;
     public static async Task SeedData(DbContext context)
     {
         var connection = context.Database.GetDbConnection();
-       
+        
+        if (connection.State != System.Data.ConnectionState.Open)
+            await connection.OpenAsync();
+
+        await using var checkCommand = connection.CreateCommand();
+        checkCommand.CommandText = "SELECT COUNT(*) FROM Ingredients";
+        var count = (int?)await checkCommand.ExecuteScalarAsync();
+
+        if (count.HasValue && count.Value > 0)
+        {
+            return;
+        }
+
         var basePath = AppContext.BaseDirectory;
 
         var path = Path.Combine(basePath, "Persistence", "SeedDataInserts.sql");
         if (!File.Exists(path))
             throw new FileNotFoundException($"Script file not found at {path}");
+        
         var sqlScript = await File.ReadAllTextAsync(path);
 
         await using var command = connection.CreateCommand();
         command.CommandText = sqlScript;
-
-        if (connection.State != System.Data.ConnectionState.Open)
-            await connection.OpenAsync();
 
         await command.ExecuteNonQueryAsync();
     }
