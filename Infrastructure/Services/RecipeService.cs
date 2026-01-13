@@ -11,8 +11,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services
 {
-    
-
     public class RecipeService : IRecipeService
     {
         private readonly AppDbContext _context;
@@ -24,11 +22,11 @@ namespace Infrastructure.Services
             _userContextService = userContextService;
         }
 
-        public async Task <PagedResult<RecipeDto>> GetAllAsync(RecipeQuery query)
+        public async Task<PagedResult<RecipeDto>> GetAllAsync(RecipeQuery query)
         {
-            var baseQuery =  _context.Recipes
+            var baseQuery = _context.Recipes
                 .AsNoTracking()
-                .Where(r => query.SearchPhrase == null || (r.Name.ToLower().Contains(query.SearchPhrase.ToLower())))
+                .Where(r => query.SearchPhrase == null || r.Name.ToLower().Contains(query.SearchPhrase.ToLower()))
                 .Include(r => r.RecipeIngredients)
                 .ThenInclude(ri => ri.Ingredient);
 
@@ -38,14 +36,14 @@ namespace Infrastructure.Services
                 .ToListAsync();
 
             var totalItemsCount = await baseQuery.CountAsync();
+
             if (recipes == null || !recipes.Any())
             {
                 throw new ValidationException("No recipes found in the database.");
             }
-            var recipesDtos = recipes.Select(RecipeMapper.EntityToDto).ToList();
 
-            var result = new PagedResult<RecipeDto>(recipesDtos, totalItemsCount, query.PageSize, query.PageNumber);
-            return result;
+            var recipesDtos = recipes.Select(RecipeMapper.EntityToDto).ToList();
+            return new PagedResult<RecipeDto>(recipesDtos, totalItemsCount, query.PageSize, query.PageNumber);
         }
 
         public async Task<RecipeDto> GetByIdAsync(int id)
@@ -55,26 +53,23 @@ namespace Infrastructure.Services
                 .Include(r => r.RecipeIngredients)
                 .ThenInclude(ri => ri.Ingredient)
                 .SingleOrDefaultAsync(r => r.Id == id);
+
             if (recipe == null)
             {
                 throw new ValidationException("Recipe not found");
             }
-            var recipeDto = RecipeMapper.EntityToDto(recipe);
-            return recipeDto;
+
+            return RecipeMapper.EntityToDto(recipe);
         }
 
         public async Task<bool> CreateAsync(RecipeCreateDto recipeCreateDto)
         {
-            if(recipeCreateDto.RecipeIngredientsDto == null || recipeCreateDto.RecipeIngredientsDto.Count == 0)
-            {
+            if (recipeCreateDto.RecipeIngredientsDto == null || recipeCreateDto.RecipeIngredientsDto.Count == 0)
                 throw new ValidationException("Recipe must contain at least one ingredient.");
-            }
 
             var userName = _userContextService.GetUsername();
             if (string.IsNullOrEmpty(userName))
-            {
                 throw new UnauthorizedException("User not logged in.");
-            }
 
             var ingredientIds = recipeCreateDto.RecipeIngredientsDto
                 .Select(ri => ri.IngredientId)
@@ -85,7 +80,7 @@ namespace Infrastructure.Services
                 .Where(i => ingredientIds.Contains(i.Id))
                 .ToListAsync();
 
-            if(ingredients.Count != ingredientIds.Count)
+            if (ingredients.Count != ingredientIds.Count)
             {
                 var missingIngredientIds = ingredientIds.Except(ingredients.Select(i => i.Id)).ToList();
                 throw new ValidationException($"Ingredients not found: {string.Join(", ", missingIngredientIds)}");
@@ -101,14 +96,10 @@ namespace Infrastructure.Services
 
         public async Task<bool> UpdateAsync(int id, string description)
         {
-            var existingRecipe = await _context.Recipes
-                .FirstOrDefaultAsync(r => r.Id ==id);
-            
-            if(existingRecipe == null)
-            {
+            var existingRecipe = await _context.Recipes.FirstOrDefaultAsync(r => r.Id == id);
+            if (existingRecipe == null)
                 throw new NotFoundException("Not found");
-            }
-            
+
             existingRecipe.Description = description;
             await _context.SaveChangesAsync();
             return true;
@@ -124,42 +115,30 @@ namespace Infrastructure.Services
             return await _context.SaveChangesAsync() > 0;
         }
 
-        
         public async Task<decimal> CalculateRecipeCostAsync(int recipeId)
         {
             var totalCost = await _context.RecipeIngredients
                 .Include(ri => ri.Ingredient)
                 .Where(ri => ri.RecipeId == recipeId)
-                .SumAsync(ri => ri.Ingredient.PriceFor100Grams * ((decimal)ri.Quantity/100));
+                .SumAsync(ri => ri.Ingredient.PriceFor100Grams * ((decimal)ri.Quantity / 100));
+
             return totalCost;
         }
-        
 
         public async Task<PagedResult<RecipeDto>> GetRecipesWithinBudget(RecipeQuery query)
         {
             var userDto = await _userContextService.GetUserDto();
-            
-                if (userDto == null)
-                {
-                    throw new ValidationException("User not found");
-                }
+            if (userDto == null)
+                throw new ValidationException("User not found");
+
             decimal budgetToUse = query.Budget ?? userDto.Budget ?? 0m;
-
-                if (budgetToUse < 1)
-                {
-                    throw new ValidationException("User budget less than 1");
-                }
-
-           
 
             var baseQuery = _context.Recipes
                 .AsNoTracking()
                 .Where(r => r.TotalCost <= budgetToUse)
-                .Where(r => query.SearchPhrase == null
-                 || (r.Name.ToLower().Contains(query.SearchPhrase.ToLower())))
+                .Where(r => query.SearchPhrase == null || r.Name.ToLower().Contains(query.SearchPhrase.ToLower()))
                 .Include(r => r.RecipeIngredients)
                 .ThenInclude(ri => ri.Ingredient);
-                
 
             var totalRecipesCount = await baseQuery.CountAsync();
 
@@ -170,13 +149,10 @@ namespace Infrastructure.Services
                 .Select(recipe => RecipeMapper.EntityToDto(recipe))
                 .ToListAsync();
 
-           
-
-            if (pagedRecipes == null || !pagedRecipes.Any())
-            {
+            if (!pagedRecipes.Any())
                 throw new ValidationException("No recipes found within budget");
-            }
-            return new PagedResult<RecipeDto> (pagedRecipes,totalRecipesCount,query.PageSize, query.PageNumber);
+
+            return new PagedResult<RecipeDto>(pagedRecipes, totalRecipesCount, query.PageSize, query.PageNumber);
         }
 
         public async Task<PagedResult<RecipeDto>> GetRecipesUserCanPrepareAsync(RecipeQuery query)
@@ -185,16 +161,16 @@ namespace Infrastructure.Services
 
             var matchingRecipeIds = await _context.RecipeIngredients
                 .GroupJoin(
-                _context.UserIngredients.Where(ui => ui.UserId == userId),
-                ri => ri.IngredientId,
-                ui => ui.IngredientId,
-                (ri, uis) => new { ri, uis }
+                    _context.UserIngredients.Where(ui => ui.UserId == userId),
+                    ri => ri.IngredientId,
+                    ui => ui.IngredientId,
+                    (ri, uis) => new { ri, uis }
                 )
                 .SelectMany(
-                x => x.uis.DefaultIfEmpty(),
-                (x, ui) => new { x.ri, ui }
+                    x => x.uis.DefaultIfEmpty(),
+                    (x, ui) => new { x.ri, ui }
                 )
-                .GroupBy ( x => x.ri.RecipeId)
+                .GroupBy(x => x.ri.RecipeId)
                 .Select(g => new
                 {
                     RecipeId = g.Key,
@@ -208,8 +184,7 @@ namespace Infrastructure.Services
             var baseQuery = _context.Recipes
                 .AsNoTracking()
                 .Where(r => matchingRecipeIds.Contains(r.Id))
-                .Where(r => query.SearchPhrase == null ||
-                (r.Name.ToLower().Contains(query.SearchPhrase.ToLower())))
+                .Where(r => query.SearchPhrase == null || r.Name.ToLower().Contains(query.SearchPhrase.ToLower()))
                 .Include(r => r.RecipeIngredients)
                 .ThenInclude(ri => ri.Ingredient);
 
@@ -221,16 +196,21 @@ namespace Infrastructure.Services
                 .Take(query.PageSize)
                 .Select(recipe => RecipeMapper.EntityToDto(recipe))
                 .ToListAsync();
-                
+
             if (!pagedRecipes.Any())
-            {
                 throw new ValidationException("No recipes found that can be prepared with available ingredients.");
-            }
 
-            return new PagedResult<RecipeDto>(pagedRecipes,totalRecipesCount,query.PageSize, query.PageNumber);
+            return new PagedResult<RecipeDto>(pagedRecipes, totalRecipesCount, query.PageSize, query.PageNumber);
         }
+        public async Task<decimal> GetCheapestRecipeCostAsync()
+        {
+            var cheapest = await _context.Recipes
+                .OrderBy(r => r.TotalCost)
+                .Select(r => r.TotalCost)
+                .FirstOrDefaultAsync();
 
-        
+            return Math.Round(cheapest, 2);
 
+        }
     }
 }

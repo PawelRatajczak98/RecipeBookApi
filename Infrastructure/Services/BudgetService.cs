@@ -19,12 +19,12 @@ namespace Infrastructure.Services
         {
             if (amount <= 0)
             {
-                throw new ValidationException("Value must be greater than 0");
+                throw new ValidationException("Wartość musi być większa niż 0");
             }
             var user = await _context.Users.FindAsync(_userContextService.GetUserId());
             if (user == null)
             {
-                throw new UnauthorizedException("User not found");
+                throw new UnauthorizedException("Nie znaleziono użytkownika");
             }
             user.Budget += amount;
             await _context.SaveChangesAsync();
@@ -35,13 +35,13 @@ namespace Infrastructure.Services
         {
             if (amount <= 0)
             {
-                throw new ValidationException("Value msut be lower than 0");
+                throw new ValidationException("Wartość musi być mniejsza niż 0");
             }
             var user = await _context.Users.FindAsync(_userContextService.GetUserId());
            
             if (user == null)
             {
-                throw new UnauthorizedException("User not found");
+                throw new UnauthorizedException("Nie znaleziono użytkownika");
             }
             
             if(user.Budget < amount)
@@ -62,7 +62,7 @@ namespace Infrastructure.Services
                 .SingleOrDefaultAsync(u => u.Id == userId);
             if (user == null)
             {
-                throw new ValidationException("Check user info");
+                throw new ValidationException("Sprawdź informacje użytkownika");
             }
             var budget = user.Budget;
             return budget.HasValue ? budget.Value : 0;

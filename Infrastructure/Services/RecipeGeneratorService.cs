@@ -37,7 +37,7 @@ namespace Infrastructure.Services
 
             if (_allIngredients.Count == 0)
             {
-                throw new ValidationException("Ingredients didn't load");
+                throw new ValidationException("Składniki nie zostały załadowane");
             }
             var ingredientDict = _allIngredients.ToDictionary(i => i.Id, i => i.Name);
 
@@ -75,7 +75,7 @@ namespace Infrastructure.Services
                 int currentSaveCounter = Interlocked.Increment(ref saveCounter);
                 if (currentSaveCounter % 1000 == 0)
                 {
-                    Console.WriteLine($"Saved: {currentSaveCounter}");
+                    Console.WriteLine($"Zapisano: {currentSaveCounter}");
                 }
             }
             return true;
@@ -103,7 +103,7 @@ namespace Infrastructure.Services
 
             if (ingredientIdAndName.Count == 0)
             {
-                throw new ValidationException("Dictionary empty");
+                throw new ValidationException("Słownik pusty");
             }
             
             var recipeIngredientsDto = ingredientIdAndName

@@ -31,28 +31,28 @@ namespace Infrastructure.Services
         public async Task<string> EditRolesAsync(string id, string roles)
         {
             if (string.IsNullOrEmpty(roles))
-                return "You must select at least one role";
+                return "Musi wybrać przynajmniej jedną role";
 
             var selectedRoles = roles.Split(",").ToArray();
 
             var user = await _userManager.FindByIdAsync(id);
 
             if (user == null)
-                return "User not found";
+                return "Nie znaleziono użytkownika";
 
             var userRoles = await _userManager.GetRolesAsync(user);
 
             var result = await _userManager.AddToRolesAsync(user, selectedRoles.Except(userRoles));
 
             if (!result.Succeeded)
-                return "Failed to add to roles";
+                return "Błąd dodawania roli";
 
             result = await _userManager.RemoveFromRolesAsync(user, userRoles.Except(selectedRoles));
 
             if (!result.Succeeded)
-                return "Failed to remove from roles";
+                return "Błąd usuwania roli";
 
-            return $"Successfully changed user role to {roles}";
+            return $"Pomyślnie zmieniono rolę użytkownika na {roles}";
         }
 
         public async Task<bool> GenerateRandomRecipes(int amount, CancellationToken cancellationToken)

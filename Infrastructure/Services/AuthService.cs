@@ -51,14 +51,14 @@ namespace Infrastructure.Services
             var user = await _userManager.FindByNameAsync(loginRequestDto.UserName);
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginRequestDto.Password))
             {
-                throw new Exception("UserName or password wrong");
+                throw new Exception("Błędna nazwa użytkownika lub hasło");
             }
             
             string token = await _tokenService.CreateJWTToken(user);
             
             if (string.IsNullOrEmpty(token))
             {
-                throw new Exception("Token generation failed");
+                throw new Exception("Błąd generowania Tokenu");
             }
             return token;
         }

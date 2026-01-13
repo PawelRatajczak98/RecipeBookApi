@@ -2,6 +2,7 @@
   <h1>Lista Przepisów</h1>
 
   <div class="controls">
+
     <div class="search-row">
       <input
         type="text"
@@ -24,16 +25,15 @@
             type="number" 
             placeholder="Budżet (PLN)" 
             #budgetInput
-            [value]="customBudget()"
-            (input)="onCustomBudgetChange(+budgetInput.value)"
+            [value]="customBudget() ?? currentBudget() | number:'1.2-2'"
+            (input)="onCustomBudgetChange($event.target.value)"
             min="0"
-            step="0.01"
+            step="1"
           />
           <button class="btn-primary" (click)="onGetWithinBudget()">Pokaż w budżecie</button>
         </div>
-        
         <span class="budget-info">
-          Mój budżet: {{ userInfoService.currentUser()?.budget | currency:'PLN' }}
+          Mój budżet: {{ currentBudget() | currency:'PLN ' }}
         </span>
       </div>
 
@@ -46,40 +46,48 @@
         <button class="btn-outline" (click)="onShowAll()">Pokaż wszystkie</button>
       </div>
     }
+
   </div>
 
-  <div class="content">
+  <div class="content mt-4">
     @if (recipes().length > 0) {
-    <table>
-      <thead>
-        <tr>
-          <th>Nazwa</th>
-          <th class="steps">Opis</th>
-          <th>Cena</th>
-          <th>Produkty</th>
-          </tr>
-      </thead>
-      <tbody>
-        @for (recipe of recipes(); track $index){
-        <tr>
-          <td><a [routerLink]="['/recipes', recipe.id]" class="recipe-link">{{ recipe.name }}</a></td>
-          <td>{{ recipe.description }}</td>
-          <td>{{ recipe.totalCost}}</td>
-          <td>
-            @if (recipe.recipeIngredients && recipe.recipeIngredients.length > 0) {
-              <ul>
-                @for (product of recipe.recipeIngredients; track product.ingredientId) {
-                <li>{{ product.ingredientName }} - {{ product.quantity }} {{ product.unit }}</li>
-                }
-              </ul>
-            } @else {
-              <span>Brak produktów</span>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nazwa</th>
+              <th class="steps">Opis</th>
+              <th>Cena</th>
+              <th>Produkty</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (recipe of recipes(); track $index) {
+              <tr>
+                <td class="Name" data-label="Nazwa"><a [routerLink]="['/recipes', recipe.id]" class="recipe-link">{{ recipe.name }}</a>
+                  <div class="row">
+                  <span class="icon material-symbols-outlined">thumb_up 20</span>
+                  <span class="icon material-symbols-outlined">chat 30</span>
+                  </div>
+              </td>
+                <td class="Desc" data-label="Opis">{{ recipe.description }}</td>
+                <td class="Price" data-label="Cena">{{ recipe.totalCost | currency:'PLN ' }}</td>
+                <td class="Prod" data-label="Produkty">
+                  @if (recipe.recipeIngredients && recipe.recipeIngredients.length > 0) {
+                    <ul>
+                      @for (product of recipe.recipeIngredients; track product.ingredientId) {
+                        <li>{{ product.ingredientName }} - {{ product.quantity }} {{ product.unit }}</li>
+                      }
+                    </ul>
+                  } @else {
+                    <span>Brak produktów</span>
+                  }
+                </td>
+              </tr>
             }
-          </td>
-        </tr>
-        }
-      </tbody>
-    </table>
+          </tbody>
+        </table>
+      </div>
     } @else {
       @if (query().searchPhrase) {
         <p>Brak wyników dla frazy "{{ query().searchPhrase }}".</p>
@@ -89,21 +97,21 @@
     }
   </div>
 
-  <div class="pagination">
+  <div class="pagination mt-3 d-flex flex-wrap gap-2">
     @if (totalPages() > 1) {
-    <button (click)="onPageChange(query().pageNumber - 1)" [disabled]="query().pageNumber === 1">
-      &laquo; Poprzednia
-    </button>
+      <button class="btn btn-outline-primary" (click)="onPageChange(query().pageNumber - 1)" [disabled]="query().pageNumber === 1">
+        &laquo; Poprzednia
+      </button>
 
-    @for (page of pages(); track page) {
-    <button (click)="onPageChange(page)" [class.active]="page === query().pageNumber">
-      {{ page }}
-    </button>
-    }
+      @for (page of pages(); track page) {
+        <button class="btn btn-outline-primary" (click)="onPageChange(page)" [class.active]="page === query().pageNumber">
+          {{ page }}
+        </button>
+      }
 
-    <button (click)="onPageChange(query().pageNumber + 1)" [disabled]="query().pageNumber === totalPages()">
-      Następna &raquo;
-    </button>
+      <button class="btn btn-outline-primary" (click)="onPageChange(query().pageNumber + 1)" [disabled]="query().pageNumber === totalPages()">
+        Następna &raquo;
+      </button>
     }
   </div>
 </div>

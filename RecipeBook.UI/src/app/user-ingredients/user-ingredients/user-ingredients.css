@@ -2,12 +2,15 @@
   padding: 1.5rem;
   background: #ffffff;
   box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-  height: 100vh;
+  border-radius: 0px 0px 15px 15px;
 }
 /* ================== NAGŁÓWKI ================== */
 h2, h3 {
   color: #2D6A4F;
   margin-bottom: 1rem;
+}
+h2{
+  font-size: 2.5rem;
 }
 
 /* ================== KOMUNIKATY ================== */
@@ -178,4 +181,29 @@ form button[type="submit"]:disabled {
 .btn-cancel:hover {
   background: #52B788;
   color: white;
+}
+@media screen and (max-width: 992px) {
+.ng-pristine{
+  input, select {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+}
+.edit-field{
+  max-width: 60px;
+}
+.edit-mode{
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 0.3rem;
+  align-items: center;
+  width: 100%;
+}
+.ingredient-item{
+  justify-content: space-between;
+}
+.ng-valid, .ng-dirty, .ng-touched{
+  width: 100%;
+}
 }

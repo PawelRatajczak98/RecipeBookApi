@@ -5,8 +5,6 @@ import { UserInfoService } from './user/services/user-info.service';
 import { AuthService } from './auth/services/auth.service';
 import { AuthModal } from './shared/components/auth-modal/auth-modal';
 
-
-
 @Component({
   selector: 'app-root',
   imports: [CommonModule, RouterLink, RouterOutlet, RouterLinkActive, AuthModal],
@@ -17,6 +15,7 @@ export class App {
   protected readonly title = signal('RecipeBook.UI');
   protected userInfo = inject(UserInfoService);
   private authService = inject(AuthService);
+  private router = inject(Router); // <-- dodajemy router
   protected readonly routerLinkOptions = signal({ exact: true });
   protected authModal = viewChild(AuthModal);
 
@@ -30,8 +29,10 @@ export class App {
 
   onAuthSuccess() {
   }
+
   logout() {
     this.authService.logout();
     this.userInfo.clear();
+    this.router.navigate(['/recipes']);
   }
 }

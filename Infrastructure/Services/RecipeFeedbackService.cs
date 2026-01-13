@@ -22,7 +22,7 @@ namespace Infrastructure.Services
         {
             if (commentContent == null)
             {
-                throw new ValidationException("Empty comment");
+                throw new ValidationException("Pusta zawartość");
             }
 
             var comment = new Comment
@@ -50,12 +50,12 @@ namespace Infrastructure.Services
             var userId = _userContextService.GetUserId();
             if (userId is null)
             {
-                throw new UnauthorizedException("User not found");
+                throw new UnauthorizedException("Nie znaleziono użytkownika");
             }
             var comment = await _context.Comments.FindAsync(userId,recipeId);
             if (comment == null)
             {
-                throw new ValidationException("Comment not found.");
+                throw new ValidationException("Nie znaleziono komentarza");
             }
             _context.Comments.Remove(comment);
             await _context.SaveChangesAsync();
@@ -67,13 +67,13 @@ namespace Infrastructure.Services
             var userId = _userContextService.GetUserId();
             if (userId is null)
             {
-                throw new UnauthorizedException("User not found");
+                throw new UnauthorizedException("Nie znaleziono użytkownika");
             }
             var existingLike = await _context.Likes
                 .FirstOrDefaultAsync(l => l.UserId == userId && l.RecipeId == recipeId);
             if (existingLike != null)
             {
-                throw new ValidationException("You already liked this recipe");
+                throw new ValidationException("Już polubiłeś ten przepis");
             }
 
             var like = new Like
@@ -84,7 +84,7 @@ namespace Infrastructure.Services
 
             _context.Likes.Add(like);
             await _context.SaveChangesAsync();
-            return "Recipe liked";
+            return "Polubiono przepis";
         }
 
         public async Task<List<Like>> GetLikesAsync(int recipeId)
@@ -101,13 +101,13 @@ namespace Infrastructure.Services
             var userId = _userContextService.GetUserId();
             if (userId is null)
             {
-                throw new UnauthorizedException("User not found");
+                throw new UnauthorizedException("Nie znaleziono użytkownika");
             }
             var like = await _context.Likes
                 .FirstOrDefaultAsync(l => l.UserId == userId && l.RecipeId == recipeId);
             if (like == null)
             {
-                throw new ValidationException("Like not found.");
+                throw new ValidationException("Nie znaleziono polubienia");
             }
             _context.Likes.Remove(like);
             await _context.SaveChangesAsync();

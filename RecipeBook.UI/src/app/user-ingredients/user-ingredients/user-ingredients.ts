@@ -65,11 +65,16 @@ export class UserIngredients {
   }
 
   loadUserIngredients() {
-    this.userIngredientService.getUserIngredients().subscribe({
-      next: list => this.userIngredients.set(list),
-      error: () => this.errorMessage.set('Failed to load user ingredients')
-    });
-  }
+  this.userIngredientService.getUserIngredients().subscribe({
+    next: list => {
+      this.userIngredients.set(list);
+      this.userIngredientService.setUserIngredients(list);
+    },
+    error: () => this.errorMessage.set('Nie udało się załadować składników użytkownika')
+  });
+}
+
+
 
   onSubmit() {
     this.errorMessage.set(null);
@@ -98,7 +103,17 @@ export class UserIngredients {
       quantity: quantity,
       unit: unit
     };
-    this.addUserIngredient(dto);
+    this.userIngredientService.addUserIngredient(dto)
+    .pipe(finalize(() => this.isSubmitting.set(false)))
+    .subscribe({
+      next: () => {
+        this.successMessage.set('Składnik dodany pomyślnie');
+        this.loadUserIngredients(); // odświeżamy lokalny i serwisowy sygnał
+        this.form.reset();
+      },
+      error: err => this.errorMessage.set(err.userMessage || 'Błąd serwera')
+    });
+
   }
 
   addUserIngredient(dto: userIngredientCreateDto) {

@@ -5,17 +5,16 @@
       </a>
 
       @if (userInfo.currentUser()) {
-        <a routerLink="/recipes/create" routerLinkActive="active" class="btn-primary-m">Dodaj</a>
+        <a routerLink="/recipes/create" routerLinkActive="active" class="btn-primary-m">Dodaj przepis</a>
         <a routerLink="/user/ingredients" routerLinkActive="active" class="btn-primary-m">Składniki</a>
       }
     </div>
 
     <div class="nav-right d-flex align-items-center gap-3">
       @if (userInfo.currentUser(); as u) {
-        <span class="hello">Witaj, {{ u.userName }}</span>
-        <a [routerLink]="[{ outlets: { side: ['user'] } }]" class="btn-primary-m">Panel</a>
+        <a routerLink="/user" routerLinkActive="active" class="btn-primary-m">Panel</a>
         <button class="btn-primary-logout" (click)="logout()">
-        Wyloguj
+          <span>Wyloguj</span>
       </button>
 
       } @else {
@@ -23,6 +22,40 @@
         <button class="btn-outline" (click)="showRegister()">Zarejestruj</button>
       }
     </div>
+</nav>
+<nav class="mobile-logo-bar">
+  <a routerLink="/recipes" class="logo-link">
+    <img src="assets/LogoCookBook.webp" alt="CookBook" class="logo-img">
+  </a>
+</nav>
+
+<nav class="mobile-nav">
+  @if (!userInfo.currentUser()) {
+    <a (click)="showLogin()">
+      <span class="icon material-symbols-outlined">login</span>
+      <span class="label">Zaloguj</span>
+  </a>
+  <a (click)="showRegister()">
+      <span class="icon material-symbols-outlined">person_add</span>
+      <span class="label">Zarejestruj</span>
+  </a>
+}
+  @if (userInfo.currentUser()) {
+    <a routerLink="/recipes/create" routerLinkActive="active">
+      <span class="icon material-symbols-outlined">add</span>
+      <span class="label">Dodaj</span>
+    </a>
+
+    <a routerLink="/user/ingredients" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <span class="icon material-symbols-outlined">grocery</span>
+      <span class="label">Składniki</span>
+    </a>
+
+    <a routerLink="/user" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <span class="icon material-symbols-outlined">person</span>
+      <span class="label">Panel</span>
+    </a>
+  }
 </nav>
 
 <div class="page-wrapper">

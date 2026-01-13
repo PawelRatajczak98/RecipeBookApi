@@ -60,10 +60,11 @@ export const routes: Routes = [
   },
 
   {
-    path: 'user',
-    outlet: 'side',
-    component: User,
+  path: 'user',
+  canActivate: [authGuard],
+  component: User,
   },
+
 
   {
     path: '**',

@@ -23,7 +23,7 @@ namespace Infrastructure.Services
             var ingredients = await _context.Ingredients.ToListAsync();
             if (ingredients.Count == 0)
             {
-                throw new ValidationException("No ingredients found in the database.");
+                throw new ValidationException("Brak składników w bazie danych");
             }
 
             return ingredients;
@@ -34,7 +34,7 @@ namespace Infrastructure.Services
             var ingredient = await _context.Ingredients.FindAsync(id);
             if(ingredient == null)
             {
-                throw new ValidationException("Ingredient not found");
+                throw new ValidationException("Nie znaleziono takiego składniku");
             }
             return ingredient;
         }
@@ -43,11 +43,11 @@ namespace Infrastructure.Services
         {
             if (dto == null)
             {
-                throw new ValidationException("Empty Ingredient");
+                throw new ValidationException("Składnik jest pusty");
             }
             if (_context.Ingredients.Any(i => i.Name == dto.Name))
             {
-                throw new ValidationException("Item already created in database");
+                throw new ValidationException("Składnik już istnieje w bazie danych");
             }
             var ingredient = new Ingredient
             {
@@ -66,7 +66,7 @@ namespace Infrastructure.Services
             var existingIngredient = await _context.Ingredients.FindAsync(id);
             if (existingIngredient == null)
             {
-                throw new ValidationException("Ingredient not found");
+                throw new ValidationException("Nie znaleziono takiego składniku");
             }
             existingIngredient.Description = updatedIngredient.Description;
             existingIngredient.PriceFor100Grams = updatedIngredient.PriceFor100Grams;
@@ -79,7 +79,7 @@ namespace Infrastructure.Services
             var entity = await _context.Ingredients.FindAsync(id);
             if (entity == null)
             {
-                throw new ValidationException("Ingredient not found");
+                throw new ValidationException("Nie znaleziono takiego składniku");
             }
             _context.Ingredients.Remove(entity);
             await _context.SaveChangesAsync();

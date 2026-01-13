@@ -112,9 +112,18 @@ namespace Api.Controllers
             var deleted = await _recipeService.DeleteAsync(id);
             return deleted ? NoContent() : NotFound();
         }
-
-        
-
-
+        [HttpGet("cheapest")]
+        public async Task<ActionResult<decimal>> GetCheapestRecipeCost()
+        {
+            try
+            {
+                var cheapestCost = await _recipeService.GetCheapestRecipeCostAsync();
+                return Ok(cheapestCost);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

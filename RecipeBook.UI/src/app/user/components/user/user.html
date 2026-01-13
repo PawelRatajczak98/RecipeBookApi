@@ -1,27 +1,31 @@
 <section class="user-panel">
-  @if (authService.user(); as user) {
-  <h2>Witaj, {{ user.userName }}!</h2>
-  <p>Twój budżet: {{ user.budget | currency:'PLN' }}</p>
-  } @else {
-  <p>Nie jesteś zalogowany.</p>
-  }
 
-  @if (authService.ingredients().length) {
-  <h3 (click)="toggleIngredients()" class="collapsible">
-        <span>Twoje składniki</span>
-    <span class="arrow">{{ showIngredients() ? '▲' : '▼' }}</span>
-  </h3>
+  <ng-container *ngIf="userInfoService.currentUser() as user">
 
-  @if (showIngredients()) {
-  <ul>
-    @for (ing of authService.ingredients(); track $index) {
-    <li>{{ ing }}</li>
-    }
-  </ul>
-  }
-  } @else {
-  <p>Brak składników.</p>
-  }
+    <h1 class="hello">Witaj, {{ user.userName }}</h1>
 
-  <button (click)="onLogout()">Wyloguj</button>
+    <div class="budget-card">
+      Twój budżet: {{ userBudget() | currency:'PLN ' }}
+    </div>
+
+    <ng-container *ngIf="userIngredients().length; else noIngredients">
+      <h3 (click)="toggleIngredients()" class="collapsible">
+        <span class="ingredients">Twoje składniki</span>
+        <span class="arrow">{{ showIngredients() ? '▲' : '▼' }}</span>
+      </h3>
+
+      <ul *ngIf="showIngredients()">
+        <li *ngFor="let ing of userIngredients(); let i = index">
+          {{ ing.ingredientName }} - {{ ing.quantity }} {{ ing.unit }}
+        </li>
+      </ul>
+    </ng-container>
+
+    <ng-template #noIngredients>
+      <p>Brak składników.</p>
+    </ng-template>
+     <button class="btn-primary-logout" (click)="onLogout()">
+      <span>Wyloguj</span>
+    </button>
+  </ng-container>
 </section>

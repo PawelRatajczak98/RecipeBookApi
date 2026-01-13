@@ -41,12 +41,12 @@
 
         @if (editingIngredientId() === ui.ingredientId) {
           <div class="edit-mode">
-            <input
+            <input class="edit-field"
               type="number"
               [value]="editQuantity()"
               #quantityInput
               (input)="editQuantity.set(+quantityInput.value)"
-              step="0.1"
+              step="1"
               min="0"
             />
             <span>{{ ui.unit }}</span>
