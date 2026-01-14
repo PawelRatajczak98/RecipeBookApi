@@ -41,13 +41,13 @@ namespace RecipeBook.Integration.Tests
         [Fact]
         public async Task Login_ShouldAccessJwtToken()
         {
-           // Arrange         
+           // Arrange
             var jwt = await TestAuthHelper.LoginUserAndRetrieveTokenAsync(_httpClient);
             _output.WriteLine($"Retrieved JWT: {jwt}");
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwt);
 
-            // Act
-            var response = await _httpClient.GetAsync("/api/Account/validateJwt");
+            // Act - używamy istniejącego endpointu /api/account/login/me który wymaga autoryzacji
+            var response = await _httpClient.GetAsync("/api/account/login/me");
 
             // Assert
             _output.WriteLine($"Response Status Code: {response.StatusCode}");
@@ -55,7 +55,12 @@ namespace RecipeBook.Integration.Tests
             _output.WriteLine($"Response Content: {content}");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Contains("valid", content, StringComparison.OrdinalIgnoreCase);
+            // Sprawdź czy odpowiedź zawiera dane użytkownika (UserName lub Budget)
+            Assert.True(
+                content.Contains("userName", StringComparison.OrdinalIgnoreCase) ||
+                content.Contains("budget", StringComparison.OrdinalIgnoreCase),
+                "Response should contain user data (userName or budget)"
+            );
         }
     }
 }

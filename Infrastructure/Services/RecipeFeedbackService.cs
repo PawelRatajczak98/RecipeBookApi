@@ -25,10 +25,18 @@ namespace Infrastructure.Services
                 throw new ValidationException("Pusta zawartość");
             }
 
+            var userId = _userContextService.GetUserId();
+            if (userId is null)
+            {
+                throw new UnauthorizedException("Nie znaleziono użytkownika");
+            }
+
             var comment = new Comment
             {
                 Content = commentContent,
-                RecipeId = recipeId
+                RecipeId = recipeId,
+                UserId = userId,
+                CreatedAt = DateTime.UtcNow
             };
 
             _context.Comments.Add(comment);
@@ -52,7 +60,8 @@ namespace Infrastructure.Services
             {
                 throw new UnauthorizedException("Nie znaleziono użytkownika");
             }
-            var comment = await _context.Comments.FindAsync(userId,recipeId);
+            // Klucz kompozytowy: RecipeId (int), UserId (string) - kolejność zgodna z HasKey w AppDbContext
+            var comment = await _context.Comments.FindAsync(recipeId, userId);
             if (comment == null)
             {
                 throw new ValidationException("Nie znaleziono komentarza");
