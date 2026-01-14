@@ -34,7 +34,7 @@ namespace Infrastructure.Services
             var ingredient = await _context.Ingredients.FindAsync(id);
             if(ingredient == null)
             {
-                throw new ValidationException("Nie znaleziono takiego składniku");
+                throw new NotFoundException("Nie znaleziono takiego składniku");
             }
             return ingredient;
         }

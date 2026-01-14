@@ -273,7 +273,7 @@ namespace RecipeBook.Integration.Tests
         [Fact]
         public async Task GET_IngredientById_WithInvalidId_Returns404()
         {
-            // Act
+            // Act - używamy ID które na pewno nie istnieje
             var response = await _client.GetAsync("/api/ingredient/999999");
 
             // Assert
@@ -286,9 +286,10 @@ namespace RecipeBook.Integration.Tests
             // Arrange
             var ingredientDto = new
             {
-                Name = $"NewIngredient_{Guid.NewGuid()}",
+                Name = $"NewIngredient",
                 PriceFor100Grams = 5.50m,
-                Unit = "gram"
+                Unit = "gram",
+                Description = "Git"
             };
 
             // Act
@@ -321,7 +322,7 @@ namespace RecipeBook.Integration.Tests
             await AuthorizeClientAsAdminAsync();
 
             // Act
-            var response = await _client.DeleteAsync("/api/ingredient/999");
+            var response = await _client.DeleteAsync("/api/ingredient/1");
 
             // Assert
             Assert.True(
@@ -448,6 +449,9 @@ namespace RecipeBook.Integration.Tests
         [Fact]
         public async Task GET_RecipeById_WithInvalidId_Returns404()
         {
+            // Arrange
+            await AuthorizeClientAsync();
+
             // Act
             var response = await _client.GetAsync("/api/recipes/999999");
 
@@ -494,7 +498,7 @@ namespace RecipeBook.Integration.Tests
         public async Task GET_RecipesCanPrepare_WithAuth_Returns200()
         {
             // Arrange
-            await AuthorizeClientAsync();
+            await AuthorizeClientAsAdminAsync();
 
             // Act
             var response = await _client.GetAsync("/api/recipes/can-prepare?pageNumber=1&pageSize=10");
@@ -520,7 +524,7 @@ namespace RecipeBook.Integration.Tests
             await AuthorizeClientAsync();
             var recipeDto = new
             {
-                Name = $"TestRecipe_{Guid.NewGuid()}",
+                Name = $"TestRecipe",
                 Description = "Test description",
                 Instructions = "Test instructions",
                 CategoryId = 1,
