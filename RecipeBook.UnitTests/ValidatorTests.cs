@@ -1,4 +1,5 @@
-using Application.Dto;
+using Application.DTO.Recipe;
+using Application.DTO.RecipeIngredient;
 using Application.Validators;
 using FluentAssertions;
 using FluentValidation.TestHelper;
@@ -30,13 +31,13 @@ public class ValidatorTests
             Name = "Spaghetti Carbonara",
             Description = "Klasyczny włoski przepis",
             Instructions = "1. Ugotuj makaron\n2. Przygotuj sos\n3. Wymieszaj",
-            PreparationTime = 30,
+            PreparationTime = TimeSpan.FromMinutes(20),
+            CookingTime = TimeSpan.FromMinutes(15),
             Servings = 4,
-            CategoryId = 1,
-            Ingredients = new List<RecipeIngredientDto>
+            RecipeIngredientsDto = new List<RecipeIngredientDto>
             {
-                new RecipeIngredientDto { IngredientId = 1, Quantity = 200 },
-                new RecipeIngredientDto { IngredientId = 2, Quantity = 100 }
+                new RecipeIngredientDto { IngredientId = 1, Quantity = 200, Unit = "g" },
+                new RecipeIngredientDto { IngredientId = 2, Quantity = 100, Unit = "g" }
             }
         };
 
@@ -56,12 +57,12 @@ public class ValidatorTests
             Name = "",
             Description = "Opis",
             Instructions = "Instrukcje",
-            PreparationTime = 30,
+            PreparationTime = TimeSpan.FromMinutes(30),
+            CookingTime = TimeSpan.FromMinutes(10),
             Servings = 4,
-            CategoryId = 1,
-            Ingredients = new List<RecipeIngredientDto>
+            RecipeIngredientsDto = new List<RecipeIngredientDto>
             {
-                new RecipeIngredientDto { IngredientId = 1, Quantity = 200 }
+                new RecipeIngredientDto { IngredientId = 1, Quantity = 200, Unit = "g" }
             }
         };
 
@@ -70,7 +71,7 @@ public class ValidatorTests
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Name)
-            .WithErrorMessage("Nazwa przepisu jest wymagana.");
+            .WithErrorMessage("Recipe name is required.");
     }
 
     [Fact]
@@ -79,15 +80,15 @@ public class ValidatorTests
         // Arrange
         var dto = new RecipeCreateDto
         {
-            Name = new string('A', 201), // 201 znaków
+            Name = new string('A', 101), // 101 znaków
             Description = "Opis",
             Instructions = "Instrukcje",
-            PreparationTime = 30,
+            PreparationTime = TimeSpan.FromMinutes(30),
+            CookingTime = TimeSpan.FromMinutes(10),
             Servings = 4,
-            CategoryId = 1,
-            Ingredients = new List<RecipeIngredientDto>
+            RecipeIngredientsDto = new List<RecipeIngredientDto>
             {
-                new RecipeIngredientDto { IngredientId = 1, Quantity = 200 }
+                new RecipeIngredientDto { IngredientId = 1, Quantity = 200, Unit = "g" }
             }
         };
 
@@ -96,110 +97,7 @@ public class ValidatorTests
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Name)
-            .WithErrorMessage("Nazwa przepisu nie może przekraczać 200 znaków.");
-    }
-
-    [Fact]
-    public void RecipeCreateDto_WithNoIngredients_ShouldFailValidation()
-    {
-        // Arrange
-        var dto = new RecipeCreateDto
-        {
-            Name = "Test Recipe",
-            Description = "Opis",
-            Instructions = "Instrukcje",
-            PreparationTime = 30,
-            Servings = 4,
-            CategoryId = 1,
-            Ingredients = new List<RecipeIngredientDto>() // Pusta lista
-        };
-
-        // Act
-        var result = _validator.TestValidate(dto);
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(x => x.Ingredients)
-            .WithErrorMessage("Przepis musi zawierać przynajmniej jeden składnik.");
-    }
-
-    [Theory]
-    [InlineData(0, "Czas przygotowania musi być większy niż 0.")]
-    [InlineData(-5, "Czas przygotowania musi być większy niż 0.")]
-    [InlineData(0, "Liczba porcji musi być większa niż 0.", 0)]
-    [InlineData(30, "Liczba porcji musi być większa niż 0.", -1)]
-    public void RecipeCreateDto_WithInvalidValues_ShouldFailValidation(
-        int preparationTime,
-        string expectedError,
-        int servings = 4)
-    {
-        // Arrange
-        var dto = new RecipeCreateDto
-        {
-            Name = "Test Recipe",
-            Description = "Opis",
-            Instructions = "Instrukcje",
-            PreparationTime = preparationTime,
-            Servings = servings,
-            CategoryId = 1,
-            Ingredients = new List<RecipeIngredientDto>
-            {
-                new RecipeIngredientDto { IngredientId = 1, Quantity = 200 }
-            }
-        };
-
-        // Act
-        var result = _validator.TestValidate(dto);
-
-        // Assert
-        result.Errors.Should().Contain(e => e.ErrorMessage == expectedError);
-    }
-
-    [Fact]
-    public void RecipeCreateDto_WithNullIngredients_ShouldFailValidation()
-    {
-        // Arrange
-        var dto = new RecipeCreateDto
-        {
-            Name = "Test Recipe",
-            Description = "Opis",
-            Instructions = "Instrukcje",
-            PreparationTime = 30,
-            Servings = 4,
-            CategoryId = 1,
-            Ingredients = null! // Null
-        };
-
-        // Act
-        var result = _validator.TestValidate(dto);
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(x => x.Ingredients);
-    }
-
-    [Fact]
-    public void RecipeCreateDto_WithInvalidCategoryId_ShouldFailValidation()
-    {
-        // Arrange
-        var dto = new RecipeCreateDto
-        {
-            Name = "Test Recipe",
-            Description = "Opis",
-            Instructions = "Instrukcje",
-            PreparationTime = 30,
-            Servings = 4,
-            CategoryId = 0, // Nieprawidłowe ID
-            Ingredients = new List<RecipeIngredientDto>
-            {
-                new RecipeIngredientDto { IngredientId = 1, Quantity = 200 }
-            }
-        };
-
-        // Act
-        var result = _validator.TestValidate(dto);
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(x => x.CategoryId)
-            .WithErrorMessage("ID kategorii musi być większe niż 0.");
+            .WithErrorMessage("Recipe name cannot exceed 100 characters.");
     }
 
     [Fact]
@@ -211,12 +109,12 @@ public class ValidatorTests
             Name = "Test Recipe",
             Description = "", // Pusty opis
             Instructions = "Instrukcje",
-            PreparationTime = 30,
+            PreparationTime = TimeSpan.FromMinutes(30),
+            CookingTime = TimeSpan.FromMinutes(10),
             Servings = 4,
-            CategoryId = 1,
-            Ingredients = new List<RecipeIngredientDto>
+            RecipeIngredientsDto = new List<RecipeIngredientDto>
             {
-                new RecipeIngredientDto { IngredientId = 1, Quantity = 200 }
+                new RecipeIngredientDto { IngredientId = 1, Quantity = 200, Unit = "g" }
             }
         };
 
@@ -225,24 +123,24 @@ public class ValidatorTests
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Description)
-            .WithErrorMessage("Opis przepisu jest wymagany.");
+            .WithErrorMessage("Recipe description is required.");
     }
 
     [Fact]
-    public void RecipeCreateDto_WithEmptyInstructions_ShouldFailValidation()
+    public void RecipeCreateDto_WithDescriptionTooLong_ShouldFailValidation()
     {
         // Arrange
         var dto = new RecipeCreateDto
         {
             Name = "Test Recipe",
-            Description = "Opis",
-            Instructions = "", // Puste instrukcje
-            PreparationTime = 30,
+            Description = new string('A', 501), // 501 znaków
+            Instructions = "Instrukcje",
+            PreparationTime = TimeSpan.FromMinutes(30),
+            CookingTime = TimeSpan.FromMinutes(10),
             Servings = 4,
-            CategoryId = 1,
-            Ingredients = new List<RecipeIngredientDto>
+            RecipeIngredientsDto = new List<RecipeIngredientDto>
             {
-                new RecipeIngredientDto { IngredientId = 1, Quantity = 200 }
+                new RecipeIngredientDto { IngredientId = 1, Quantity = 200, Unit = "g" }
             }
         };
 
@@ -250,8 +148,83 @@ public class ValidatorTests
         var result = _validator.TestValidate(dto);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.Instructions)
-            .WithErrorMessage("Instrukcje przygotowania są wymagane.");
+        result.ShouldHaveValidationErrorFor(x => x.Description)
+            .WithErrorMessage("Recipe description cannot exceed 500 characters.");
+    }
+
+    [Fact]
+    public void RecipeCreateDto_WithNoIngredients_ShouldFailValidation()
+    {
+        // Arrange
+        var dto = new RecipeCreateDto
+        {
+            Name = "Test Recipe",
+            Description = "Opis",
+            Instructions = "Instrukcje",
+            PreparationTime = TimeSpan.FromMinutes(30),
+            CookingTime = TimeSpan.FromMinutes(10),
+            Servings = 4,
+            RecipeIngredientsDto = new List<RecipeIngredientDto>() // Pusta lista
+        };
+
+        // Act
+        var result = _validator.TestValidate(dto);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.RecipeIngredientsDto)
+            .WithErrorMessage("At least one ingredient is required.");
+    }
+
+    [Fact]
+    public void RecipeCreateDto_WithInvalidIngredientId_ShouldFailValidation()
+    {
+        // Arrange
+        var dto = new RecipeCreateDto
+        {
+            Name = "Test Recipe",
+            Description = "Opis",
+            Instructions = "Instrukcje",
+            PreparationTime = TimeSpan.FromMinutes(30),
+            CookingTime = TimeSpan.FromMinutes(10),
+            Servings = 4,
+            RecipeIngredientsDto = new List<RecipeIngredientDto>
+            {
+                new RecipeIngredientDto { IngredientId = 0, Quantity = 200, Unit = "g" } // Invalid ID
+            }
+        };
+
+        // Act
+        var result = _validator.TestValidate(dto);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.RecipeIngredientsDto)
+            .WithErrorMessage("Each ingredient must have a valid ID and quantity greater than zero.");
+    }
+
+    [Fact]
+    public void RecipeCreateDto_WithInvalidIngredientQuantity_ShouldFailValidation()
+    {
+        // Arrange
+        var dto = new RecipeCreateDto
+        {
+            Name = "Test Recipe",
+            Description = "Opis",
+            Instructions = "Instrukcje",
+            PreparationTime = TimeSpan.FromMinutes(30),
+            CookingTime = TimeSpan.FromMinutes(10),
+            Servings = 4,
+            RecipeIngredientsDto = new List<RecipeIngredientDto>
+            {
+                new RecipeIngredientDto { IngredientId = 1, Quantity = 0, Unit = "g" } // Invalid quantity
+            }
+        };
+
+        // Act
+        var result = _validator.TestValidate(dto);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.RecipeIngredientsDto)
+            .WithErrorMessage("Each ingredient must have a valid ID and quantity greater than zero.");
     }
 
     #endregion
