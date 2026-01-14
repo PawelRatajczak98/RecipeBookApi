@@ -1,4 +1,5 @@
-﻿using Domain.Interfaces;
+﻿using Application.DTO.Comment;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +17,10 @@ namespace Api.Controllers
         {
             _recipeFeedbackService = recipeFeedbackService;
         }
-        
+
         [HttpGet]
         [Route("comments")]
-        public async Task<IActionResult> GetComments([FromRoute]int recipeId)
+        public async Task<IActionResult> GetComments([FromQuery] int recipeId)
         {
             var comments = await _recipeFeedbackService.GetCommentsAsync(recipeId);
             return Ok(comments);
@@ -27,15 +28,20 @@ namespace Api.Controllers
 
         [HttpPost]
         [Route("comments")]
-        public async Task<IActionResult> PostComment([FromRoute]string commentContent, int recipeId)
+        public async Task<IActionResult> PostComment([FromBody] CommentCreateDto dto)
         {
-            var comment = await _recipeFeedbackService.AddCommentAsync(commentContent, recipeId);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var comment = await _recipeFeedbackService.AddCommentAsync(dto.CommentContent, dto.RecipeId);
             return Ok(comment);
         }
 
         [HttpDelete]
         [Route("comments")]
-        public async Task<IActionResult> DeleteComment([FromRoute] int recipeId)
+        public async Task<IActionResult> DeleteComment([FromQuery] int recipeId)
         {
             var result = await _recipeFeedbackService.DeleteCommentAsync(recipeId);
             return Ok(result);
@@ -43,7 +49,7 @@ namespace Api.Controllers
 
         [HttpGet]
         [Route("likes")]
-        public async Task<IActionResult> GetLikes([FromRoute] int recipeId)
+        public async Task<IActionResult> GetLikes([FromQuery] int recipeId)
         {
             var likes = await _recipeFeedbackService.GetLikesAsync(recipeId);
             return Ok(likes);
@@ -51,7 +57,7 @@ namespace Api.Controllers
 
         [HttpPost]
         [Route("likes")]
-        public async Task<IActionResult> PostLike([FromRoute] int recipeId)
+        public async Task<IActionResult> PostLike([FromQuery] int recipeId)
         {
             var like = await _recipeFeedbackService.AddLikeAsync(recipeId);
             return Ok(like);
@@ -59,7 +65,7 @@ namespace Api.Controllers
 
         [HttpDelete]
         [Route("likes")]
-        public async Task<IActionResult> DeleteLike([FromRoute] int recipeId)
+        public async Task<IActionResult> DeleteLike([FromQuery] int recipeId)
         {
             var result = await _recipeFeedbackService.DeleteLikeAsync(recipeId);
             return Ok(result);
