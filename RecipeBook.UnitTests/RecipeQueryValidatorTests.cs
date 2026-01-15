@@ -132,7 +132,7 @@ public class RecipeQueryValidatorTests
         var result = _validator.TestValidate(query);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.PageSize)
+        result.ShouldHaveValidationErrorFor("Page Size") // Validator używa "Page Size" zamiast "PageSize"
             .WithErrorMessage("PageSize must in [5,10,15,20,25]");
     }
 
@@ -278,7 +278,7 @@ public class RecipeQueryValidatorTests
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.PageNumber);
-        result.ShouldHaveValidationErrorFor(x => x.PageSize);
+        result.ShouldHaveValidationErrorFor("Page Size"); // Validator używa "Page Size" zamiast "PageSize"
     }
 
     [Theory]

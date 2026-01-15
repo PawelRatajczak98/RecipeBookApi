@@ -239,18 +239,20 @@ public class ExceptionsTests
 
     #region Status Code Verification
 
-    [Theory]
-    [InlineData(typeof(ValidationException), 400)]
-    [InlineData(typeof(UnauthorizedException), 401)]
-    [InlineData(typeof(ForbiddenException), 403)]
-    [InlineData(typeof(NotFoundException), 404)]
-    public void AllExceptions_ShouldHaveCorrectStatusCodes(Type exceptionType, int expectedStatusCode)
+    [Fact]
+    public void AllExceptions_ShouldHaveCorrectStatusCodes()
     {
         // Arrange & Act
-        var exception = (ApiException)Activator.CreateInstance(exceptionType, "Test message")!;
+        var validationEx = new ValidationException("Test");
+        var unauthorizedEx = new UnauthorizedException("Test");
+        var forbiddenEx = new ForbiddenException("Test");
+        var notFoundEx = new NotFoundException("Test");
 
         // Assert
-        exception.StatusCode.Should().Be(expectedStatusCode);
+        validationEx.StatusCode.Should().Be(400);
+        unauthorizedEx.StatusCode.Should().Be(401);
+        forbiddenEx.StatusCode.Should().Be(403);
+        notFoundEx.StatusCode.Should().Be(404);
     }
 
     #endregion
