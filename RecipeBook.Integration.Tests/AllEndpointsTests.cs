@@ -1,3 +1,4 @@
+using Application.DTO.UserIngredient;
 using RecipeBook.Integration.Tests.Helpers;
 using System.Net;
 using System.Net.Http.Headers;
@@ -366,7 +367,7 @@ namespace RecipeBook.Integration.Tests
         }
 
         [Fact]
-        public async Task POST_UserIngredient_WithAuth_Returns200()
+        public async Task POST_UserIngredient_WithAuth_Returns201()
         {
             // Arrange
             await AuthorizeClientAsync();
@@ -374,14 +375,13 @@ namespace RecipeBook.Integration.Tests
             {
                 IngredientId = 1,
                 IngredientName = "Test Ingredient",
-                Quantity = 500.0,
-                Unit = "g"
+                Quantity = 500.0m,
+                Unit = "gramy"
             };
 
             // Act
             var response = await _client.PostAsJsonAsync("/api/useringredients", userIngredientDto);
 
-            // Assert - endpoint zwraca Created (201), nie OK (200)
             Assert.True(
                 response.StatusCode == HttpStatusCode.Created ||
                 response.StatusCode == HttpStatusCode.OK,
@@ -395,12 +395,22 @@ namespace RecipeBook.Integration.Tests
             // Arrange
             await AuthorizeClientAsync();
 
-            // Najpierw dodaj składnik
-            await _client.PostAsJsonAsync("/api/useringredients", new
+            // Najpierw dodaj składnik (używamy ID 1 - powinien istnieć w bazie)
+            var createResponse = await _client.PostAsJsonAsync("/api/useringredients", new
             {
                 IngredientId = 1,
-                Quantity = 500.0
+                IngredientName = "Test Ingredient",
+                Quantity = 500.0,
+                Unit = "g"
             });
+
+            // Sprawdź czy POST się powiódł
+            if (!createResponse.IsSuccessStatusCode)
+            {
+                var createError = await createResponse.Content.ReadAsStringAsync();
+                _output.WriteLine($"POST failed with {createResponse.StatusCode}: {createError}");
+            }
+            Assert.True(createResponse.IsSuccessStatusCode, $"POST should succeed but got {createResponse.StatusCode}");
 
             var updateDto = new
             {
@@ -411,10 +421,18 @@ namespace RecipeBook.Integration.Tests
             // Act
             var response = await _client.PatchAsJsonAsync("/api/useringredients/1", updateDto);
 
+            // Sprawdź błąd PATCH jeśli wystąpił
+            if (!response.IsSuccessStatusCode)
+            {
+                var updateError = await response.Content.ReadAsStringAsync();
+                _output.WriteLine($"PATCH failed with {response.StatusCode}: {updateError}");
+            }
+
             // Assert
             Assert.True(
                 response.StatusCode == HttpStatusCode.OK ||
-                response.StatusCode == HttpStatusCode.NoContent
+                response.StatusCode == HttpStatusCode.NoContent,
+                $"Expected OK or NoContent, but got {response.StatusCode}"
             );
         }
 
@@ -548,7 +566,7 @@ namespace RecipeBook.Integration.Tests
                     new
                     {
                         IngredientName = "Test Ingredient",
-                        IngredientId = 999,
+                        IngredientId = 1,
                         Quantity = 200.0,
                         Unit = "gram"
                     }
