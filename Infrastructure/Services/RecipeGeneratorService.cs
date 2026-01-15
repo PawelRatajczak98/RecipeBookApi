@@ -140,8 +140,8 @@ namespace Infrastructure.Services
             SET TotalCost = (
             SELECT SUM(RI.Quantity * I.PriceFor100Grams / 100.0)
             FROM RecipeIngredients AS RI
-            JOIN Ingredients AS I ON RI.IngredientId = I.IngredientId
-            WHERE RI.RecipeId = Recipes.IngredientId
+            JOIN Ingredients AS I ON RI.IngredientId = I.Id
+            WHERE RI.RecipeId = Recipes.Id
             );";
             await _dbContext.Database.ExecuteSqlRawAsync(sql);
             return true;

@@ -56,7 +56,7 @@ namespace Infrastructure.Services
 
             if (recipe == null)
             {
-                throw new ValidationException("Recipe not found");
+                throw new NotFoundException("Recipe not found");
             }
 
             return RecipeMapper.EntityToDto(recipe);

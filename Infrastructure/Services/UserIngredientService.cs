@@ -60,8 +60,8 @@ namespace Infrastructure.Services
 
         public async Task<UserIngredient> UpdateAsync(int ingredientId, UserIngredientUpdateDto updatedUserIngredient)
         {
-            
-            var userId = _userContextService.GetUserId;
+
+            var userId = _userContextService.GetUserId();
             if(userId is null)
             {
                 throw new UnauthorizedException("User not found");
