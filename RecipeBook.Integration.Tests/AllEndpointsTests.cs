@@ -537,13 +537,21 @@ namespace RecipeBook.Integration.Tests
             await AuthorizeClientAsync();
             var recipeDto = new
             {
-                Name = $"TestRecipe",
+                Name = "TestRecipe",
                 Description = "Test description",
                 Instructions = "Test instructions",
-                CategoryId = 1,
+                PreparationTime = "00:15:00", // TimeSpan 15 minut
+                CookingTime = "00:30:00",      // TimeSpan 30 minut
+                Servings = 4,
                 RecipeIngredientsDto = new[]
                 {
-                    new { IngredientId = 1, Quantity = 200.0, Unit = "gram" }
+                    new
+                    {
+                        IngredientName = "Test Ingredient",
+                        IngredientId = 999,
+                        Quantity = 200.0,
+                        Unit = "gram"
+                    }
                 }
             };
 
@@ -551,6 +559,11 @@ namespace RecipeBook.Integration.Tests
             var response = await _client.PostAsJsonAsync("/api/recipes", recipeDto);
 
             // Assert
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _output.WriteLine($"Error: {errorContent}");
+            }
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
@@ -780,7 +793,7 @@ namespace RecipeBook.Integration.Tests
         {
             var loginDto = new
             {
-                userName = "Bob",
+                userName = "Richy",
                 password = "Pa$$w0rd"
             };
 
