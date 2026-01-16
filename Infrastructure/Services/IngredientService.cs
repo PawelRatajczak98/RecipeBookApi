@@ -54,7 +54,7 @@ namespace Infrastructure.Services
                 Name = dto.Name,
                 Description = dto.Description,
                 PriceFor100Grams = dto.PriceFor100Grams,
-                Unit = "gramy"
+                Unit = dto.Unit
             };
             await _context.Ingredients.AddAsync(ingredient);
             await _context.SaveChangesAsync();

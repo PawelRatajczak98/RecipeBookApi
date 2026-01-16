@@ -9,5 +9,7 @@ namespace Application.DTO.Ingredient
         public string Description { get; set; }
 
         public decimal PriceFor100Grams { get; set; }
+
+        public string Unit { get; set;  }
     }
 }
