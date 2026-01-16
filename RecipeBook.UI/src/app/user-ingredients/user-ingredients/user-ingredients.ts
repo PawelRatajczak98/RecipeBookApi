@@ -7,10 +7,12 @@ import { Ingredient } from '../../ingredients/models/ingredient.model';
 import { userIngredientCreateDto } from '../models/user-ingredient-dto-create.model';
 import { CommonModule } from '@angular/common';
 import { finalize } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-user-ingredients',
-  imports: [CommonModule,ReactiveFormsModule],
+  imports: [CommonModule,ReactiveFormsModule, FormsModule],
   templateUrl: './user-ingredients.html',
   styleUrl: './user-ingredients.css'
 })
@@ -108,7 +110,7 @@ export class UserIngredients {
     .subscribe({
       next: () => {
         this.successMessage.set('Składnik dodany pomyślnie');
-        this.loadUserIngredients(); // odświeżamy lokalny i serwisowy sygnał
+        this.loadUserIngredients();
         this.form.reset();
       },
       error: err => this.errorMessage.set(err.userMessage || 'Błąd serwera')
@@ -160,23 +162,30 @@ export class UserIngredients {
     this.editQuantity.set(0);
   }
 
-  saveEdit(ingredientId: number) {
-    this.userIngredientService.updateUserIngredient(ingredientId, this.editQuantity()).subscribe({
-      next: success => {
-        if (success) {
-          this.successMessage.set('Ilość zaktualizowana pomyślnie');
-          this.loadUserIngredients();
-          this.cancelEditing();
-        } else {
-          this.errorMessage.set('Nie udało się zaktualizować ilości');
-        }
-      },
-      error: (err) => {
-        console.error('Update error:', err);
-        this.errorMessage.set('Błąd podczas aktualizacji ilości: ' + (err.error?.message || err.message));
-      }
-    });
+saveEdit(ingredientId: number) {
+  const quantity = this.editQuantity();
+
+  if (quantity <= 0) {
+    this.errorMessage.set("Ilość musi być większa niż 0");
+    return;
   }
+
+  this.userIngredientService.updateUserIngredient(ingredientId, quantity).subscribe({
+    next: success => {
+      if (success) {
+        this.loadUserIngredients(); 
+        
+        this.successMessage.set("Ilość zaktualizowana pomyślnie");
+        this.cancelEditing();
+      } else {
+        this.errorMessage.set("Nie udało się zaktualizować ilości");
+      }
+    },
+    error: err => {
+      this.errorMessage.set("Błąd podczas aktualizacji");
+    }
+  });
+}
 
 }
 

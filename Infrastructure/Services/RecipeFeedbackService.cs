@@ -1,4 +1,6 @@
-﻿using Application.Exceptions;
+﻿using Application.DTO.Comment;
+using Application.DTO.Like;
+using Application.Exceptions;
 using Domain.Entities;
 using Domain.Interfaces;
 using Infrastructure.Persistence;
@@ -18,7 +20,7 @@ namespace Infrastructure.Services
             _userContextService = userContextService;
         }
 
-        public async Task<string> AddCommentAsync(string commentContent, int recipeId)
+        public async Task<CommentDto> AddCommentAsync(string commentContent, int recipeId)
         {
             if (commentContent == null)
             {
@@ -31,6 +33,9 @@ namespace Infrastructure.Services
                 throw new UnauthorizedException("Nie znaleziono użytkownika");
             }
 
+            var exists = await _context.Comments.AnyAsync(c => c.RecipeId == recipeId && c.UserId == userId);
+            if (exists) throw new ValidationException("Już skomentowałeś ten przepis.");
+
             var comment = new Comment
             {
                 Content = commentContent,
@@ -41,15 +46,32 @@ namespace Infrastructure.Services
 
             _context.Comments.Add(comment);
             await _context.SaveChangesAsync();
-            return $"{commentContent} added to destinated recipe.";
+
+            var userName = await _context.Users
+                .Where(u => u.Id == userId)
+                .Select(u => u.UserName)
+                .FirstOrDefaultAsync();
+
+            return new CommentDto
+            {
+                Content = comment.Content,
+                UserName = userName,
+                CreatedAt = DateTime.UtcNow
+            };
         }
 
-        public async Task<List<Comment>> GetCommentsAsync(int recipeId)
+        public async Task<List<CommentDto>> GetCommentsAsync(int recipeId)
         {
             return await _context.Comments
                 .AsNoTracking()
                 .Where(c => c.RecipeId == recipeId)
-                .Include(c => c.User)
+                .OrderByDescending(c => c.CreatedAt)
+                .Select(c => new CommentDto
+                {
+                    Content = c.Content,
+                    UserName = c.User.UserName,
+                    CreatedAt = c.CreatedAt
+                })
                 .ToListAsync();
         }
 
@@ -60,7 +82,7 @@ namespace Infrastructure.Services
             {
                 throw new UnauthorizedException("Nie znaleziono użytkownika");
             }
-            // Klucz kompozytowy: RecipeId (int), UserId (string) - kolejność zgodna z HasKey w AppDbContext
+
             var comment = await _context.Comments.FindAsync(recipeId, userId);
             if (comment == null)
             {
@@ -96,13 +118,23 @@ namespace Infrastructure.Services
             return "Polubiono przepis";
         }
 
-        public async Task<List<Like>> GetLikesAsync(int recipeId)
+        public async Task<LikeSummaryDto> GetLikesSummaryAsync(int recipeId)
         {
-            return await _context.Likes
-                .AsNoTracking()
-                .Where(l => l.RecipeId == recipeId)
-                .Include(l => l.User)
-                .ToListAsync();
+            var userId = _userContextService.GetUserId();
+            var count = await _context.Likes.CountAsync(l => l.RecipeId == recipeId);
+
+            var isLikedByMe = false;
+            if (userId != null)
+            {
+                isLikedByMe = await _context.Likes
+                    .AnyAsync(l => l.RecipeId == recipeId && l.UserId == userId);
+            }
+
+            return new LikeSummaryDto
+            {
+                TotalLikes = count,
+                LikedByCurrentUser = isLikedByMe
+            };
         }
 
         public async Task<bool> DeleteLikeAsync(int recipeId)

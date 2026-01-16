@@ -1,7 +1,7 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(45, 106, 79, 0.45); /* zielona mgła zamiast czerni */
+  background: rgba(45, 106, 79, 0.45);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,9 +30,9 @@
   right: 1rem;
   border: none;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  font-size: 1.4rem;
+  width: 40px;
+  height: 40px;
+  font-size: 2rem;
   cursor: pointer;
   color: #52B788;
   display: flex;

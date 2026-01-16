@@ -52,6 +52,8 @@ namespace Infrastructure.Services
                 .AsNoTracking()
                 .Include(r => r.RecipeIngredients)
                 .ThenInclude(ri => ri.Ingredient)
+                .Include (r => r.Likes)
+                .Include (r => r.Comments)
                 .SingleOrDefaultAsync(r => r.Id == id);
 
             if (recipe == null)

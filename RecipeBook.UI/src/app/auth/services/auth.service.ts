@@ -13,6 +13,7 @@ export class AuthService {
   private http = inject(HttpClient);
   private userInfoService = inject(UserInfoService);
   private userIngredientsService = inject(UserIngredientsService);
+  readonly activeTab = signal<'login' | 'register'>('login');
 
   private readonly API = {
     login: 'https://localhost:7090/api/account/login',
@@ -35,6 +36,7 @@ export class AuthService {
       tap((success: boolean) => {
         if (success) {
           this.successMessage.set('Rejestracja przebiegła pomyślnie! Możesz się teraz zalogować.');
+          this.activeTab.set('login');
         }
       }),
       catchError((error: unknown) => {
@@ -68,6 +70,7 @@ export class AuthService {
       ),
       catchError((error: unknown) => {
         const message = this.extractErrorMessage(error, 'Błąd logowania lub pobierania danych.');
+        this.activeTab.set('login');
         this.errorMessage.set(message);
         return EMPTY;
       }),

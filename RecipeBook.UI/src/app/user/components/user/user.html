@@ -2,7 +2,7 @@
 
   <ng-container *ngIf="userInfoService.currentUser() as user">
 
-    <h1 class="hello">Witaj, {{ user.userName }}</h1>
+    <h1 class="hello">Witaj, {{ user.userName }}!</h1>
 
     <div class="budget-card">
       Twój budżet: {{ userBudget() | currency:'PLN ' }}
@@ -24,7 +24,7 @@
     <ng-template #noIngredients>
       <p>Brak składników.</p>
     </ng-template>
-     <button class="btn-primary-logout" (click)="onLogout()">
+     <button class="btn-outline" (click)="onLogout()">
       <span>Wyloguj</span>
     </button>
   </ng-container>

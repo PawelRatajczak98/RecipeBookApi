@@ -12,7 +12,9 @@ namespace Application.DTO.Recipe
         public string Description { get; set; }
         public List<RecipeIngredientDto> RecipeIngredients { get; set; } = new List<RecipeIngredientDto>();
         public List<CommentDto> Comments { get; set; } = new List<CommentDto>();
-        public List<LikeDto> Likes { get; set; } = new List<LikeDto>();
+        public LikeSummaryDto Likes { get; set; } = new LikeSummaryDto();
+        public int LikesCount { get; set; }
+        public int CommentsCount { get; set; }
         public decimal TotalCost { get; set; }
     }
 }

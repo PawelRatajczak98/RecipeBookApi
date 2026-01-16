@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Application.DTO.Like
 {
-    public class LikeDto
+    public class LikeSummaryDto
     {
-        public string UserName { get; set; }
+        public int TotalLikes { get; set; }
+        public bool LikedByCurrentUser { get; set; }
     }
 }

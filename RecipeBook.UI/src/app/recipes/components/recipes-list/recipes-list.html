@@ -25,12 +25,12 @@
             type="number" 
             placeholder="Budżet (PLN)" 
             #budgetInput
-            [value]="customBudget() ?? currentBudget() | number:'1.2-2'"
+            [value]="customBudget() === null ? '' : customBudget()"
             (input)="onCustomBudgetChange($event.target.value)"
             min="0"
             step="1"
           />
-          <button class="btn-primary" (click)="onGetWithinBudget()">Pokaż w budżecie</button>
+          <button class="btn-secondary" (click)="onGetWithinBudget()">Pokaż w budżecie</button>
         </div>
         <span class="budget-info">
           Mój budżet: {{ currentBudget() | currency:'PLN ' }}

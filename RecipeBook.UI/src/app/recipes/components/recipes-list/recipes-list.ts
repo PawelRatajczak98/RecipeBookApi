@@ -10,6 +10,7 @@ import { PagedResult } from '../../../paged-result/models/paged-result.model';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 function emptyPagedResult<T>(): PagedResult<T> {
   return { items: [], totalPages: 0, itemFrom: 0, itemTo: 0, totalItemsCount: 0 };
@@ -40,10 +41,9 @@ export class RecipesList {
   currentBudget = computed(() => this.userIngredientService.getCurrentBudget());
 
   customBudget = signal<number | null>(null);
-  minBudget = signal<number>(0); // domyślnie 0, ustawimy na backendzie
+  minBudget = signal<number>(0);
 
   constructor() {
-    // efekt reagujący na zalogowanie/wylogowanie
     effect(() => {
       const user = this.userInfoService.currentUser();
       if (user) {
@@ -53,7 +53,6 @@ export class RecipesList {
       }
     });
 
-    // przy inicjalizacji komponentu pobierz najtańszy przepis i ustaw minBudget
     this.loadMinBudget();
   }
 
@@ -62,43 +61,45 @@ export class RecipesList {
       const cheapest = await this.recipeService.getCheapestRecipeCost().toPromise();
       this.minBudget.set(cheapest ?? 0);
     } catch {
-      this.minBudget.set(0.01); // minimalna awaryjna wartość
+      this.minBudget.set(0.01);
     }
   }
 
-  recipesResult = toSignal(
-    toObservable(
-      computed(() => {
-        const user = this.userInfoService.currentUser();
-        const rawBudget = this.customBudget() ?? this.currentBudget();
-        const budget = Math.round(rawBudget * 100) / 100;
-        const userId = user?.userId;
+recipesResult = toSignal(
+  toObservable(
+    computed(() => {
+      const user = this.userInfoService.currentUser();
+      const rawBudget = this.customBudget() ?? this.currentBudget();
+      const budget = Math.round(rawBudget * 100) / 100;
+      const userId = user?.userId;
+      return { query: this.query(), mode: this.mode(), budget, userId };
+    })
+  ).pipe(
+    switchMap(({ query, mode, budget, userId }) => {
+      let request$;
 
-        return { query: this.query(), mode: this.mode(), budget, userId };
-      })
-    ).pipe(
-      switchMap(({ query, mode, budget, userId }) => {
-        if (mode.type === 'all') {
-          return this.recipeService.getRecipes(query);
-        }
+      if (mode.type === 'all') {
+        request$ = this.recipeService.getRecipes(query);
+      } else if (mode.type === 'budget') {
+        if ((budget ?? 0) < this.minBudget()) return of(emptyPagedResult<RecipeDto>());
+        request$ = this.recipeService.getRecipesWithinBudget(budget ?? 0, query);
+      } else if (mode.type === 'canPrepare') {
+        if (!userId) return of(emptyPagedResult<RecipeDto>());
+        request$ = this.recipeService.getRecipesUserCanPrepare(userId, query);
+      } else {
+        request$ = this.recipeService.getRecipes(query);
+      }
 
-        if (mode.type === 'budget') {
-          // jeśli budżet mniejszy niż minBudget → zwróć pustą stronę
-          if ((budget ?? 0) < this.minBudget()) return of(emptyPagedResult<RecipeDto>());
-
-          return this.recipeService.getRecipesWithinBudget(budget ?? 0, query);
-        }
-
-        if (mode.type === 'canPrepare') {
-          if (!userId) return of(emptyPagedResult<RecipeDto>());
-          return this.recipeService.getRecipesUserCanPrepare(userId, query);
-        }
-
-        return this.recipeService.getRecipes(query);
-      })
-    ),
-    { initialValue: emptyPagedResult<RecipeDto>() }
-  );
+      return request$.pipe(
+        catchError(error => {
+          console.warn('Backend zwrócił błąd (prawdopodobnie brak wyników):', error);
+          return of(emptyPagedResult<RecipeDto>());
+        })
+      );
+    })
+  ),
+  { initialValue: emptyPagedResult<RecipeDto>() }
+);
 
   recipes = computed(() => this.recipesResult().items ?? []);
   totalCount = computed(() => this.recipesResult().totalItemsCount);
@@ -135,21 +136,18 @@ export class RecipesList {
   }
 
   onCustomBudgetChange(value: string) {
+  if (value === '') {
+    this.customBudget.set(null);
+  } else {
     const parsed = parseFloat(value);
-    if (isNaN(parsed)) {
-      this.customBudget.set(null);
-    } else {
+    if (!isNaN(parsed)) {
       const rounded = Math.round(parsed * 100) / 100;
       this.customBudget.set(rounded);
     }
-
-    if (this.mode().type === 'budget') {
-      this.query.update(q => ({ ...q, pageNumber: 1 }));
-    }
   }
 
-
-  setMinBudget(value: number) {
-    this.minBudget.set(value);
+  if (this.mode().type === 'budget') {
+    this.query.update(q => ({ ...q, pageNumber: 1 }));
   }
+}
 }

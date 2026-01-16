@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, output } from '@angular/cor
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { UserLoginDtoModel } from '../../../user/models/user-login-dto.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -14,6 +15,7 @@ import { UserLoginDtoModel } from '../../../user/models/user-login-dto.model';
 export class Login {
   private fb = inject(FormBuilder);
   protected authService = inject(AuthService);
+  private router = inject(Router);
   
   loginSuccess = output<void>();
 
@@ -24,8 +26,15 @@ export class Login {
 
   onSubmit() {
     if (this.loginForm.invalid) return;
+
     this.authService.loginAndLoad(this.loginForm.getRawValue()).subscribe({
-      next: () => this.loginSuccess.emit()
+      next: () => {
+        this.loginSuccess.emit();
+        this.router.navigate(['/recipes']);
+      },
+      error: (err) => {
+        console.error('Błąd logowania:', err);
+      }
     });
   }
 

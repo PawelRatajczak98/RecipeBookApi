@@ -1,27 +1,34 @@
-<nav class="topnav">   
-    <div class="nav-left d-flex align-items-center gap-3">
-      <a routerLink="/recipes" class="d-flex align-items-center m-0">
-        <img src="assets/LogoCookBook.webp" alt="CookBook" class="logo-img">
-      </a>
+<nav class="topnav">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-10 col-md-12 d-flex justify-content-between align-items-center">
+        
+        <div class="nav-left d-flex align-items-center gap-3">
+          <a routerLink="/recipes" class="d-flex align-items-center m-0">
+            <img src="assets/LogoCookBook.webp" alt="CookBook" class="logo-img">
+          </a>
 
-      @if (userInfo.currentUser()) {
-        <a routerLink="/recipes/create" routerLinkActive="active" class="btn-primary-m">Dodaj przepis</a>
-        <a routerLink="/user/ingredients" routerLinkActive="active" class="btn-primary-m">Składniki</a>
-      }
+          @if (userInfo.currentUser()) {
+            <a routerLink="/recipes/create" routerLinkActive="active" class="btn-primary-m"><span>Dodaj przepis</span></a>
+            <a routerLink="/user/ingredients" routerLinkActive="active" class="btn-primary-m"><span>Składniki</span></a>
+          }
+        </div>
+
+        <div class="nav-right d-flex align-items-center gap-3">
+          @if (userInfo.currentUser(); as u) {
+            <a routerLink="/user" routerLinkActive="active" class="btn-primary-m"><span>Panel</span></a>
+            <button class="btn-outline" (click)="logout()">
+              <span>Wyloguj</span>
+            </button>
+          } @else {
+            <button class="btn-primary" (click)="showLogin()">Zaloguj</button>
+            <button class="btn-outline" (click)="showRegister()">Zarejestruj</button>
+          }
+        </div>
+
+      </div>
     </div>
-
-    <div class="nav-right d-flex align-items-center gap-3">
-      @if (userInfo.currentUser(); as u) {
-        <a routerLink="/user" routerLinkActive="active" class="btn-primary-m">Panel</a>
-        <button class="btn-primary-logout" (click)="logout()">
-          <span>Wyloguj</span>
-      </button>
-
-      } @else {
-        <button class="btn-primary" (click)="showLogin()">Zaloguj</button>
-        <button class="btn-outline" (click)="showRegister()">Zarejestruj</button>
-      }
-    </div>
+  </div>
 </nav>
 <nav class="mobile-logo-bar">
   <a routerLink="/recipes" class="logo-link">
@@ -31,14 +38,16 @@
 
 <nav class="mobile-nav">
   @if (!userInfo.currentUser()) {
-    <a (click)="showLogin()">
-      <span class="icon material-symbols-outlined">login</span>
-      <span class="label">Zaloguj</span>
+  <a (click)="showLogin()" class="tap-btn">
+    <span class="icon material-symbols-outlined">login</span>
+    <span class="label">Zaloguj</span>
   </a>
-  <a (click)="showRegister()">
-      <span class="icon material-symbols-outlined">person_add</span>
-      <span class="label">Zarejestruj</span>
+
+  <a (click)="showRegister()" class="tap-btn">
+    <span class="icon material-symbols-outlined">person_add</span>
+    <span class="label">Zarejestruj</span>
   </a>
+
 }
   @if (userInfo.currentUser()) {
     <a routerLink="/recipes/create" routerLinkActive="active">

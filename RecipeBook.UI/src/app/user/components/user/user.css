@@ -10,7 +10,6 @@
   font-weight: 500;
   color: #2D6A4F;
   font-size: 2.5rem;
-  text-transform: uppercase;
   text-align: start;
   display: block;
   padding-bottom: 2rem;
@@ -91,8 +90,22 @@ p{
   color: #2D6A4F;
   font-weight: 600;
 }
-.btn-primary-logout{
-  display: none;
+.btn-outline {
+  border: 1px solid #52B788;
+  color: #52B788;
+  padding: 9px 16px;
+  border-radius: 10px;
+  background: transparent;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+}
+.btn-outline:hover{
+  background: #52B788;
+  color: white !important;
+  box-shadow: 0 6px 20px #52B788;
+  justify-content: center;
+  cursor: pointer;
 }
 @media screen and (max-width: 992px) {
   .user-panel{
@@ -101,45 +114,20 @@ p{
 .budget-card{
   width: 100%;
 }
-
-.user-panel button:hover {
-  background: #DC2626;
-}
-.btn-primary-logout {
-  position: relative;
-  background: linear-gradient(135deg, #b75252, #dda900);
-  border: none;
-  padding: 10px 18px;
+.btn-outline {
+  border: 1px solid #52B788;
+  color: #52B788;
+  padding: 9px 16px;
   border-radius: 10px;
-  font-weight: 700;
-  letter-spacing: .3px;
+  background: transparent;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-outline:hover{
+  background: #52B788;
   color: white !important;
-  box-shadow: 0 6px 18px #b75252;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  overflow: hidden;
-  text-decoration: none !important;
-  width: 100%;
+  box-shadow: 0 6px 20px #52B788;
   justify-content: center;
-}
-
-.btn-primary-logout::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #dda900, #b75252);
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  z-index: 0;
-}
-
-.btn-primary-logout:hover::before {
-  opacity: 1;
-}
-
-.btn-primary-logout span {
-  position: relative;
-  z-index: 1; /* tekst nad pseudo-elementem */
+  cursor: pointer;
 }
 }

@@ -43,12 +43,12 @@
           <div class="edit-mode">
             <input class="edit-field"
               type="number"
-              [value]="editQuantity()"
-              #quantityInput
-              (input)="editQuantity.set(+quantityInput.value)"
+              [ngModel]="editQuantity()"
+              (ngModelChange)="editQuantity.set($event)"
               step="1"
               min="0"
-            />
+          />
+
             <span>{{ ui.unit }}</span>
             <button (click)="saveEdit(ui.ingredientId)" class="btn btn-save">Zapisz</button>
             <button (click)="cancelEditing()" class="btn btn-cancel">Anuluj</button>

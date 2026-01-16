@@ -82,3 +82,7 @@ button[type="submit"]:disabled {
   text-align: center;
   display: none;
 }
+
+form.stack[_ngcontent-ng-c3701104251] {
+  padding-top: 1rem !important;
+}

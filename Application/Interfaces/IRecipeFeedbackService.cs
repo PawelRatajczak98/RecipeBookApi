@@ -1,4 +1,6 @@
-﻿using Domain.Entities;
+﻿using Application.DTO.Comment;
+using Application.DTO.Like;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +11,12 @@ namespace Domain.Interfaces
 {
     public interface IRecipeFeedbackService
     {
-        Task<string> AddCommentAsync(string commentContent, int recipeId);
-        Task<string> AddLikeAsync(int recipeId);
-        Task<List<Comment>> GetCommentsAsync(int recipeId);
-        Task<List<Like>> GetLikesAsync(int recipeId);
+        Task<CommentDto> AddCommentAsync(string commentContent, int recipeId);
+        Task<List<CommentDto>> GetCommentsAsync(int recipeId);
         Task<bool> DeleteCommentAsync(int recipeId);
+
+        Task<string> AddLikeAsync(int recipeId);
+        Task<LikeSummaryDto> GetLikesSummaryAsync(int recipeId);
         Task<bool> DeleteLikeAsync(int recipeId);
     }
 }

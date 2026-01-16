@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, output } from '@angular/cor
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { RegisterRequestDto } from '../../models/register-request.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -14,6 +15,7 @@ import { RegisterRequestDto } from '../../models/register-request.model';
 export class Register {
   private fb = inject(FormBuilder);
   protected authService = inject(AuthService);
+  private router = inject(Router);
   
   registerSuccess = output<void>();
 
@@ -31,6 +33,7 @@ export class Register {
     this.authService.register(formValue).subscribe({
       next: () => {
         this.registerSuccess.emit();
+        this.router.navigate(['/recipes']); 
       },
       error: (error) => {
         console.error('Registration failed:', error);

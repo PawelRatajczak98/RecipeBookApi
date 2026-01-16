@@ -5,6 +5,7 @@ import { Register } from '../../../auth/components/register/register';
 
 @Component({
   selector: 'app-auth-modal',
+  standalone: true,
   imports: [CommonModule, Login, Register],
   template: `
     @if (isVisible()) {
@@ -29,7 +30,7 @@ import { Register } from '../../../auth/components/register/register';
             @if (currentTab() === 'login') {
               <app-login (loginSuccess)="onAuthSuccess()"></app-login>
             } @else {
-              <app-register (registerSuccess)="onAuthSuccess()"></app-register>
+              <app-register (registerSuccess)="onRegisterSuccess()"></app-register>
             }
           </div>
         </div>
@@ -56,5 +57,9 @@ export class AuthModal {
   onAuthSuccess() {
     this.authSuccess.emit();
     this.closeModal();
+  }
+
+  onRegisterSuccess() {
+    this.currentTab.set('login');
   }
 }
