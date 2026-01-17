@@ -140,17 +140,27 @@ namespace Api.Controllers
             return deleted ? NoContent() : NotFound();
         }
         [HttpGet("cheapest")]
-        public async Task<ActionResult<decimal>> GetCheapestRecipeCost()
+        public async Task<ActionResult<decimal>> GetMinRecipeCost()
         {
             try
             {
-                var cheapestCost = await _recipeService.GetCheapestRecipeCostAsync();
+                var cheapestCost = await _recipeService.GetMinRecipeCostAsync();
                 return Ok(cheapestCost);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet("cheapest-recipes")]
+        public async Task<IActionResult> GetCheapestRecipes([FromQuery] RecipeQuery recipeQuery)
+        {
+            if (recipeQuery.PageNumber < 1) recipeQuery.PageNumber = 1;
+            if (recipeQuery.PageSize <= 0) recipeQuery.PageSize = 10;
+
+            var recipes = await _recipeService.GetCheapestRecipesAsync(recipeQuery);
+            return Ok(recipes);
         }
     }
 }

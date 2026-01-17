@@ -17,7 +17,7 @@ function emptyPagedResult<T>(): PagedResult<T> {
   return { items: [], totalPages: 0, itemFrom: 0, itemTo: 0, totalItemsCount: 0 };
 }
 
-type RecipesMode = { type: 'all' } | { type: 'budget' } | { type: 'canPrepare' };
+type RecipesMode = { type: 'all' } | { type: 'budget' } | { type: 'canPrepare' } | { type: 'cheapest' };
 
 @Component({
   selector: 'app-recipes-list',
@@ -59,7 +59,7 @@ export class RecipesList {
 
   private async loadMinBudget() {
     try {
-      const cheapest = await this.recipeService.getCheapestRecipeCost().toPromise();
+      const cheapest = await this.recipeService.getMinRecipeCost().toPromise();
       this.minBudget.set(cheapest ?? 0);
     } catch {
       this.minBudget.set(0.01);
@@ -93,6 +93,8 @@ recipesResult = toSignal(
         }
         console.log('Wysyłam request do getRecipesUserCanPrepare');
         request$ = this.recipeService.getRecipesUserCanPrepare(userId, query);
+      } else if (mode.type === 'cheapest') {
+        request$ = this.recipeService.getCheapestRecipes(query);
       } else {
         request$ = this.recipeService.getRecipes(query);
       }
@@ -141,6 +143,11 @@ recipesResult = toSignal(
     console.log('onGetCanPrepare wywołane');
     console.log('userId:', this.userInfoService.currentUser()?.userId);
     this.mode.set({ type: 'canPrepare' });
+    this.query.update(q => ({ ...q, pageNumber: 1 }));
+  }
+
+  onShowCheapest(): void {
+    this.mode.set({ type: 'cheapest' });
     this.query.update(q => ({ ...q, pageNumber: 1 }));
   }
 

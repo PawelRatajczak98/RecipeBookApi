@@ -40,10 +40,12 @@
 
       <div class="actions-row">
         <button class="btn-secondary" (click)="onGetCanPrepare()">Pokaż możliwe do przygotowania</button>
+        <button class="btn-secondary" (click)="onShowCheapest()">Pokaż najtańsze</button>
         <button class="btn-outline" (click)="onShowAll()">Pokaż wszystkie</button>
       </div>
     } @else {
       <div class="actions-row">
+        <button class="btn-secondary" (click)="onShowCheapest()">Pokaż najtańsze</button>
         <button class="btn-outline" (click)="onShowAll()">Pokaż wszystkie</button>
       </div>
     }

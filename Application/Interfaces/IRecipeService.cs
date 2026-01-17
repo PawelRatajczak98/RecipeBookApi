@@ -5,7 +5,7 @@ using Domain.Entities;
 
 namespace Domain.Interfaces
 {
-    public interface IRecipeService 
+    public interface IRecipeService
     {
         Task<PagedResult<RecipeDto>> GetAllAsync(RecipeQuery recipeQuery);
         Task<RecipeDto> GetByIdAsync(int id);
@@ -15,6 +15,7 @@ namespace Domain.Interfaces
         Task<decimal> CalculateRecipeCostAsync(int recipeId);
         Task<PagedResult<RecipeDto>> GetRecipesWithinBudget(RecipeQuery recipeQuery);
         Task<PagedResult<RecipeDto>> GetRecipesUserCanPrepareAsync(RecipeQuery recipeQuery);
-        Task<decimal> GetCheapestRecipeCostAsync();
+        Task<decimal> GetMinRecipeCostAsync();
+        Task<PagedResult<RecipeDto>> GetCheapestRecipesAsync(RecipeQuery recipeQuery);
     }
 }

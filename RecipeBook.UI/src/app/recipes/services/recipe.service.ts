@@ -82,7 +82,19 @@ export class RecipeService {
     return this.http.post<boolean>(this.apiUrl, formData, { withCredentials: true });
   }
 
-  getCheapestRecipeCost(): Observable<number> {
+  getMinRecipeCost(): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}/cheapest`, { withCredentials: true });
-}
+  }
+
+  getCheapestRecipes(query: RecipeQuery): Observable<PagedResult<RecipeDto>> {
+    let params = new HttpParams()
+      .set('pageNumber', query.pageNumber.toString())
+      .set('pageSize', query.pageSize.toString());
+
+    if (query.searchPhrase) {
+      params = params.set('searchPhrase', query.searchPhrase);
+    }
+
+    return this.http.get<PagedResult<RecipeDto>>(`${this.apiUrl}/cheapest-recipes`, { params, withCredentials: true });
+  }
 }

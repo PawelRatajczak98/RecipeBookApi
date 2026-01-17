@@ -214,7 +214,7 @@ namespace Infrastructure.Services
             return new PagedResult<RecipeDto>(pagedRecipes, totalRecipesCount, query.PageSize, query.PageNumber);
         }
 
-        public async Task<decimal> GetCheapestRecipeCostAsync()
+        public async Task<decimal> GetMinRecipeCostAsync()
         {
             var cheapest = await _context.Recipes
                 .OrderBy(r => r.TotalCost)
@@ -223,6 +223,29 @@ namespace Infrastructure.Services
 
             return Math.Round(cheapest, 2);
 
+        }
+
+        public async Task<PagedResult<RecipeDto>> GetCheapestRecipesAsync(RecipeQuery query)
+        {
+            var baseQuery = _context.Recipes
+                .AsNoTracking()
+                .Where(r => query.SearchPhrase == null || r.Name.ToLower().Contains(query.SearchPhrase.ToLower()))
+                .Include(r => r.RecipeIngredients)
+                .ThenInclude(ri => ri.Ingredient)
+                .OrderBy(r => r.TotalCost);
+
+            var totalRecipesCount = await baseQuery.CountAsync();
+
+            var pagedRecipes = await baseQuery
+                .Skip(query.PageSize * (query.PageNumber - 1))
+                .Take(query.PageSize)
+                .Select(recipe => RecipeMapper.EntityToDto(recipe))
+                .ToListAsync();
+
+            if (!pagedRecipes.Any())
+                throw new ValidationException("Brak przepisów");
+
+            return new PagedResult<RecipeDto>(pagedRecipes, totalRecipesCount, query.PageSize, query.PageNumber);
         }
     }
 }
