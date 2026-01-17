@@ -30,7 +30,7 @@
           <mat-label>Zdjęcie przepisu (opcjonalne)</mat-label>
           <input matInput readonly [value]="selectedFile?.name || 'Nie wybrano pliku'" />
           <button mat-icon-button matSuffix (click)="fileInput.click()" type="button">
-            <mat-icon>attach_file</mat-icon>
+            <mat-icon>+</mat-icon>
           </button>
         </mat-form-field>
         <input #fileInput type="file" accept="image/*" (change)="onFileSelected($event)" style="display: none;" />
