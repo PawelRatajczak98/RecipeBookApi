@@ -77,6 +77,7 @@ recipesResult = toSignal(
     })
   ).pipe(
     switchMap(({ query, mode, budget, userId }) => {
+      console.log('switchMap - mode:', mode.type, 'userId:', userId);
       let request$;
 
       if (mode.type === 'all') {
@@ -85,7 +86,12 @@ recipesResult = toSignal(
         if ((budget ?? 0) < this.minBudget()) return of(emptyPagedResult<RecipeDto>());
         request$ = this.recipeService.getRecipesWithinBudget(budget ?? 0, query);
       } else if (mode.type === 'canPrepare') {
-        if (!userId) return of(emptyPagedResult<RecipeDto>());
+        console.log('canPrepare mode - userId check:', userId);
+        if (!userId) {
+          console.log('Brak userId - zwracam pusty wynik');
+          return of(emptyPagedResult<RecipeDto>());
+        }
+        console.log('Wysyłam request do getRecipesUserCanPrepare');
         request$ = this.recipeService.getRecipesUserCanPrepare(userId, query);
       } else {
         request$ = this.recipeService.getRecipes(query);
@@ -132,6 +138,8 @@ recipesResult = toSignal(
   }
 
   onGetCanPrepare(): void {
+    console.log('onGetCanPrepare wywołane');
+    console.log('userId:', this.userInfoService.currentUser()?.userId);
     this.mode.set({ type: 'canPrepare' });
     this.query.update(q => ({ ...q, pageNumber: 1 }));
   }
