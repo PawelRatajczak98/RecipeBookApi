@@ -26,44 +26,46 @@
     </form>
   </section>
 
-  <section class="recipe-ingredients">
-    <h2>Składniki</h2>
-    <div *ngFor="let ing of ingredients; let i = index" class="ingredient-item">
-      <mat-form-field appearance="outline" class="ingredient-name-field">
-        <mat-label>Składnik</mat-label>
-        <mat-select [(ngModel)]="ing.ingredientId" [name]="'ingredient_' + i"
-                    (selectionChange)="onIngredientSelect(i, $event.value)">
-          <mat-option [value]="0">-- wybierz składnik --</mat-option>
-          <mat-option *ngFor="let prod of ingredientsList()" [value]="prod.id">
-            {{ prod.name }} ({{ prod.priceFor100g }} zł/100g, {{ prod.unit }})
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+<section class="recipe-ingredients">
+  <h2>Składniki</h2>
+  <div *ngFor="let ing of ingredients; let i = index" class="ingredient-item">
+    <mat-form-field appearance="outline" class="ingredient-name-field">
+      <mat-label>Składnik</mat-label>
+      <mat-select [(ngModel)]="ing.ingredientId" [name]="'ingredient_' + i"
+                  (selectionChange)="onIngredientSelect(i, $event.value)">
+        <mat-option [value]="0">-- wybierz składnik --</mat-option>
+        <mat-option *ngFor="let prod of ingredientsList()" [value]="prod.id">
+          {{ prod.name }} ({{ prod.priceFor100g }} zł/100g, {{ prod.unit }})
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-      <mat-form-field appearance="outline" class="ingredient-quantity-field">
-        <mat-label>Ilość</mat-label>
-        <input matInput type="number" [(ngModel)]="ing.quantity" [name]="'quantity_' + i" min="1">
-      </mat-form-field>
+    <mat-form-field appearance="outline" class="ingredient-quantity-field">
+      <mat-label>Ilość</mat-label>
+      <input matInput type="number" [(ngModel)]="ing.quantity" [name]="'quantity_' + i" min="1">
+    </mat-form-field>
 
-      <mat-form-field appearance="outline" class="ingredient-unit-field">
-        <mat-label>Jednostka</mat-label>
-        <input matInput [value]="ing.unit" [name]="'unit_' + i" readonly>
-      </mat-form-field>
+    <mat-form-field appearance="outline" class="ingredient-unit-field">
+      <mat-label>Jednostka</mat-label>
+      <input matInput [value]="ing.unit" [name]="'unit_' + i" readonly>
+    </mat-form-field>
 
-      <button mat-icon-button color="warn" type="button" (click)="removeIngredient(i)">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </div>
-    <button mat-raised-button color="accent" type="button" (click)="addIngredient()" class="add-ingredient-btn">
-      <mat-icon>add</mat-icon> Dodaj składnik
+    <button mat-icon-button color="warn" type="button" (click)="removeIngredient(i)">
+      <mat-icon>delete</mat-icon>
     </button>
-  </section>
+  </div>
 
-  <section class="recipe-actions">
-    <button mat-raised-button color="primary" type="submit" (click)="onSubmit()" class="save-ingredient-btn">
-      <mat-icon>save</mat-icon> Zapisz przepis
-    </button>
-  </section>
+  <!-- Przycisk Dodaj składnik -->
+  <button type="button" class="btn-primary-m add-ingredient-btn" (click)="addIngredient()">
+    <mat-icon>add</mat-icon> Dodaj składnik
+  </button>
+</section>
+
+<section class="recipe-actions">
+  <button type="submit" class="btn-primary-m save-ingredient-btn" (click)="onSubmit()">
+    <mat-icon>save</mat-icon> Zapisz przepis
+  </button>
+</section>
 
   <div *ngIf="errorMessage()" class="error-message">
     <mat-icon>error</mat-icon> {{ errorMessage() }}

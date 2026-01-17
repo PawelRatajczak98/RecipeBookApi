@@ -85,24 +85,27 @@ form button[type="submit"]:disabled {
 /* ================== LISTA SKŁADNIKÓW ================== */
 .ingredient-item {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between !important;
   align-items: center;
   background: #F1FAF4;
   border: 1px solid #B7E4C7;
   border-radius: 12px;
   padding: 1rem;
-  margin-bottom: 0.75rem;
+  margin-top: 2px;
+  margin-bottom: 1rem;
 }
 
 .ingredient-info {
   display: flex;
-  flex-direction: column;
+  flex-direction: column !important;
   gap: 4px;
+  justify-content: center;
 }
 
-.ingredient-info strong {
+.ingredient-name {
   color: #2D6A4F;
   font-size: 1rem;
+  padding-left: 10px;
 }
 
 .quantity {
@@ -111,8 +114,9 @@ form button[type="submit"]:disabled {
 }
 
 .price {
-  font-size: 0.85rem;
+  font-size: 1rem;
   color: #2D6A4F;
+  padding-left: 5px;
 }
 
 /* ================== TRYB EDYCJI ================== */
@@ -121,11 +125,13 @@ form button[type="submit"]:disabled {
   gap: 0.5rem;
   align-items: center;
 }
+.edit-mode button:first-of-type {
+  margin-left: auto;
+}
 
 .edit-mode input {
   width: 80px;
 }
-
 /* ================== PRZYCISKI AKCJI ================== */
 .actions {
   display: flex;
@@ -141,46 +147,10 @@ form button[type="submit"]:disabled {
   font-size: 0.85rem;
 }
 
-/* Edytuj */
-.btn-edit {
-  background: #F4D35E;
-  color: #2E2E2E;
-}
-
-.btn-edit:hover {
-  background: #EFCB4A;
-}
-
-/* Usuń */
-.btn-delete {
-  background: #FFE3E3;
-  color: #B00020;
-}
-
-.btn-delete:hover {
-  background: #FFCCCC;
-}
-
-/* Zapisz */
-.btn-save {
-  background: #52B788;
-  color: white;
-}
-
-.btn-save:hover {
-  background: #40916C;
-}
-
-/* Anuluj */
-.btn-cancel {
-  background: transparent;
-  border: 2px solid #52B788;
-  color: #52B788;
-}
-
-.btn-cancel:hover {
-  background: #52B788;
-  color: white;
+.btn-primary, .btn-outline{
+  max-width: 80px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 @media screen and (max-width: 992px) {
 .ng-pristine{
@@ -196,7 +166,7 @@ form button[type="submit"]:disabled {
 .edit-mode{
   display: grid;
   grid-template-columns: 1fr auto auto auto;
-  gap: 0.3rem;
+  gap: 0.2rem;
   align-items: center;
   width: 100%;
 }

@@ -181,20 +181,11 @@ th:nth-child(4), td:nth-child(4) { width: 40%; }
   text-decoration: none;
   font-weight: 600;
   font-size: 1rem;
-  display: block;
-  margin-bottom: 0.5rem;
 }
 
 .recipe-link:hover {
   color: #40916C;
   text-decoration: underline;
-}
-
-/* ================== RECIPE FEEDBACK ================== */
-.recipe-feedback-wrapper {
-  margin-top: 0.5rem;
-  display: flex;
-  align-items: center;
 }
 
 /* ================== SKŁADNIKI ================== */
@@ -293,7 +284,8 @@ td ul li {
   white-space: pre-line; /* zachowuje złamania linii (\n) */
   line-height: 1.5;
 }
-/* Dla ekranów mniejszych niż 768px */
+
+/* ================== TABELA MOBILE ================== */
 @media (max-width: 767px) {
   .table-responsive table,
   .table-responsive thead,
@@ -330,23 +322,18 @@ td ul li {
   .table-responsive td:last-child {
     border-bottom: 0;
   }
-}
-@media (max-width: 767px) {
-  
-  .table-responsive td.Name::before, .table-responsive td.Decs::before {
+
+  .table-responsive td.Name::before, 
+  .table-responsive td.Decs::before {
     content: none;
   }
+
   .table-responsive td.Name .recipe-link {
     display: block;
     text-align: center;
     font-size: 1.2rem;
     font-weight: 700;
     color: #2D6A4F;
-  }
-
-  .table-responsive .recipe-feedback-wrapper {
-    justify-content: center;
-    margin-top: 0.75rem;
   }
 
   .table-responsive td.Desc,
@@ -357,17 +344,122 @@ td ul li {
     text-align: justify;
     margin-top: 0.5rem;
   }
+
   .table-responsive td.Price{
     font-weight: 700;
   }
+
   .table-responsive td.Prod{
     border-bottom: 1px solid #dee2e6;
   }
 
-  .table-responsive td::before {
-    content: none;
-  }
   tbody tr:hover {
-  background: white;
+    background: white;
+  }
 }
+
+/* ================== KAFELKI PRZEPISÓW ================== */
+.recipe-grid .col-12,
+.recipe-grid .col-md-6,
+.recipe-grid .col-lg-4 {
+  display: flex;
+}
+
+.recipe-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 1rem;
+  border-color: #B7E4C7;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+/* ================== SIATKA SKŁADNIKÓW ================== */
+.ingredients-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem; /* odstęp między składnikami */
+  margin-top: 0.25rem;
+  justify-content: start;
+}
+
+.ingredient-item {
+  background-color: #F1FAF4; /* lekko zielone tło */
+  color: #40916C;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+
+.recipe-card:hover {
+  transform: translateY(-5px);
+  background-color: #F1FAF4;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+.recipe-card:hover .ingredient-item {
+  background-color: #40916C;
+  color: #fff;
+}
+
+.recipe-card h5 {
+  color: #2D6A4F;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.card-title{
+  text-decoration: none;
+}
+
+.recipe-card h5:hover {
+  color: #40916C;
+}
+
+.recipe-card .card-text {
+  color: #2E2E2E;
+  margin-bottom: 0.5rem;
+  text-align: justify;
+}
+
+.recipe-card .recipe-ingredients ul {
+  padding-left: 1rem;
+  margin: 0.5rem 0;
+}
+
+.recipe-card .recipe-ingredients li {
+  color: #40916C;
+  margin-bottom: 0.25rem;
+}
+
+.recipe-card .recipe-icons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+  color: #52B788;
+}
+.recipe-icons{
+  justify-content: space-evenly;
+  z-index: 999;
+}
+
+/* Przycisk w kafelku */
+.recipe-card button {
+  margin-top: 0.5rem;
+}
+
+/* Grid responsywny */
+@media (min-width: 768px) {
+  .recipe-grid .col-md-6 {
+    flex: 0 0 50%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .recipe-grid .col-lg-4 {
+    flex: 0 0 33.3333%;
+  }
 }

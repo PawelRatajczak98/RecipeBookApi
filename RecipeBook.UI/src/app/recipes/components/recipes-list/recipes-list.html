@@ -1,6 +1,7 @@
 <div class="list-container">
   <h1>Lista Przepisów</h1>
 
+  <!-- ===== FILTRY / KONTROLKI ===== -->
   <div class="controls">
 
     <div class="search-row">
@@ -12,9 +13,9 @@
         (input)="onSearchChange(searchInput.value)"
       />
       <select class="page-size-select" #sizeSelect (change)="onPageSizeChange(+sizeSelect.value)">
-        <option value="5">5 na stronę</option>
-        <option value="10" selected>10 na stronę</option>
-        <option value="15">15 na stronę</option>
+        <option value="6">6 na stronę</option>
+        <option value="12" selected>12 na stronę</option>
+        <option value="18">18 na stronę</option>
       </select>
     </div>
 
@@ -49,57 +50,68 @@
 
   </div>
 
+  <!-- ===== LISTA PRZEPISÓW ===== -->
   <div class="content mt-4">
     @if (recipes().length > 0) {
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Nazwa</th>
-              <th class="steps">Opis</th>
-              <th>Cena</th>
-              <th>Produkty</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (recipe of recipes(); track $index) {
-              <tr>
-                <td class="Name" data-label="Nazwa">
-                  <a [routerLink]="['/recipes', recipe.id]" class="recipe-link">{{ recipe.name }}</a>
-                  <div class="recipe-feedback-wrapper">
-                    <app-recipe-feedback
-                      [recipeId]="recipe.id"
-                      [showCommentsButton]="true"
-                      iconSize="small" />
-                  </div>
-                </td>
-                <td class="Desc" data-label="Opis">{{ recipe.description }}</td>
-                <td class="Price" data-label="Cena">{{ recipe.totalCost | currency:'PLN ' }}</td>
-                <td class="Prod" data-label="Produkty">
+      <div class="row g-4 recipe-grid">
+        @for (recipe of recipes(); track $index) {
+          <div class="col-12 col-md-6 col-lg-4">
+
+            <div class="card h-100 recipe-card">
+
+              <div class="card-body d-flex flex-column">
+
+                <!-- NAZWA JAKO LINK DO SZCZEGÓŁÓW -->
+                <a
+                  [routerLink]="['/recipes', recipe.id]"
+                  class="recipe-card-link text-decoration-none mb-2">
+                  <h5 class="card-title">{{ recipe.name }}</h5>
+                </a>
+
+                <p class="card-text fw-bold">
+                  Cena: {{ recipe.totalCost | currency:'PLN ' }}
+                </p>
+
+                <p class="card-text flex-grow-1">
+                  {{ recipe.description }}
+                </p>
+
+                <!-- SKŁADNIKI -->
+                <div class="mb-2 recipe-ingredients">
                   @if (recipe.recipeIngredients && recipe.recipeIngredients.length > 0) {
-                    <ul>
+                    <div class="ingredients-grid">
                       @for (product of recipe.recipeIngredients; track product.ingredientId) {
-                        <li>{{ product.ingredientName }} - {{ product.quantity }} {{ product.unit }}</li>
+                        <span class="ingredient-item">
+                          {{ product.ingredientName }} - {{ product.quantity }} {{ product.unit }}
+                        </span>
                       }
-                    </ul>
+                    </div>
                   } @else {
                     <span>Brak produktów</span>
                   }
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+                </div>
+
+                <!-- FEEDBACK / LAJKI NA DOLE -->
+                <div class="mt-auto d-flex gap-2 recipe-feedback-wrapper">
+                  <app-recipe-feedback
+                    [recipeId]="recipe.id"
+                    [showCommentsButton]="true"
+                    iconSize="small" />
+                </div>
+
+              </div> <!-- /card-body -->
+
+            </div> <!-- /card -->
+
+          </div> <!-- /col -->
+        }
+      </div> <!-- /row -->
     } @else {
-      @if (query().searchPhrase) {
-        <p>Brak wyników dla frazy "{{ query().searchPhrase }}".</p>
-      } @else {
-        <p>Brak przepisów do wyświetlenia.</p>
-      }
+      <p>Brak przepisów do wyświetlenia.</p>
     }
   </div>
 
+  <!-- ===== PAGINACJA ===== -->
   <div class="pagination mt-3 d-flex flex-wrap gap-2">
     @if (totalPages() > 1) {
       <button class="btn btn-outline-primary" (click)="onPageChange(query().pageNumber - 1)" [disabled]="query().pageNumber === 1">
@@ -117,4 +129,5 @@
       </button>
     }
   </div>
-</div>
+
+</div> <!-- /list-container -->

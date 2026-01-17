@@ -117,13 +117,50 @@ mdc-notched-outline{
 
 .mat-mdc-text-field-wrapper.mdc-text-field.mdc-text-field--outlined::before,
 .mat-mdc-text-field-wrapper.mdc-text-field.mdc-text-field--outlined::after {
-  border-color: red; /* Or adjust other border properties */
+  border-color: red;
 }
 
 .mat-mdc-form-field {
-  --mat-form-field-outlined-outline-color: #B7E4C7;       /* normal */
+  --mat-form-field-outlined-outline-color: #B7E4C7;
   --mat-form-field-outlined-hover-outline-color: #52B788;
-  --mat-form-field-outlined-focus-outline-color: #52B788; /* focus */
+  --mat-form-field-outlined-focus-outline-color: #52B788;
   --mat-form-field-outlined-outline-width: 1px;
   --mat-form-field-outlined-focus-outline-width: 2px;
+}
+.btn-primary-m, .btn-primary  {
+  background: #52B788;
+  color: white !important;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none !important;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn-primary-m:hover, .btn-primary:hover {
+  background: #40916C;
+  border-color: #40916C;
+  box-shadow: 0 6px 20px #40916C;
+}
+@media (max-width: 768px) {
+  .ingredient-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ingredient-name-field,
+  .ingredient-quantity-field,
+  .ingredient-unit-field {
+    flex: none;
+    width: 100%;
+  }
+
+  .ingredient-item button {
+    align-self: flex-end;
+    margin-top: 6px;
+  }
 }

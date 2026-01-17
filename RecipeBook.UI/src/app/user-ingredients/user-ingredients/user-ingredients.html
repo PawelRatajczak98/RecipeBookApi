@@ -35,37 +35,36 @@
   <h3>Twoje składniki:</h3>
 
   @for (ui of userIngredients(); track ui.ingredientId) {
+    <strong class="ingredient-name">{{ ui.ingredientName }}</strong><span class="price">({{ ui.totalPrice | number:'1.2-2' }} zł)</span>
     <div class="ingredient-item">
       <div class="ingredient-info">
-        <strong>{{ ui.ingredientName }}</strong>
+        
 
         @if (editingIngredientId() === ui.ingredientId) {
           <div class="edit-mode">
             <input class="edit-field"
-              type="number"
-              [ngModel]="editQuantity()"
-              (ngModelChange)="editQuantity.set($event)"
-              step="1"
-              min="0"
-          />
-
+                   type="number"
+                   [ngModel]="editQuantity()"
+                   (ngModelChange)="editQuantity.set($event)"
+                   step="1"
+                   min="0"
+            />
             <span>{{ ui.unit }}</span>
-            <button (click)="saveEdit(ui.ingredientId)" class="btn btn-save">Zapisz</button>
-            <button (click)="cancelEditing()" class="btn btn-cancel">Anuluj</button>
           </div>
         } @else {
           <span class="quantity">{{ ui.quantity }} {{ ui.unit }}</span>
         }
-
-        <span class="price">({{ ui.totalPrice | number:'1.2-2' }} zł)</span>
       </div>
 
-      @if (editingIngredientId() !== ui.ingredientId) {
-        <div class="actions">
-          <button (click)="startEditing(ui.ingredientId, ui.quantity)" class="btn btn-edit">Edytuj</button>
-          <button (click)="deleteUserIngredient(ui.ingredientId)" class="btn btn-delete">Usuń</button>
-        </div>
-      }
+      <div class="actions">
+        @if (editingIngredientId() === ui.ingredientId) {
+          <button (click)="saveEdit(ui.ingredientId)" class="btn-primary">Zapisz</button>
+          <button (click)="cancelEditing()" class="btn-outline">Anuluj</button>
+        } @else {
+          <button (click)="startEditing(ui.ingredientId, ui.quantity)" class="btn-primary">Edytuj</button>
+          <button (click)="deleteUserIngredient(ui.ingredientId)" class="btn-outline">Usuń</button>
+        }
+      </div>
     </div>
   }
 

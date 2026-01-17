@@ -33,7 +33,7 @@ export class RecipesList {
 
   query = signal<RecipeQuery>({
     pageNumber: 1,
-    pageSize: 10,
+    pageSize: 12,
     searchPhrase: '',
   });
 

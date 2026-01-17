@@ -99,6 +99,7 @@ p{
   font-weight: 600;
   cursor: pointer;
   width: 100%;
+  display: none;
 }
 .btn-outline:hover{
   background: #52B788;
@@ -122,6 +123,7 @@ p{
   background: transparent;
   font-weight: 600;
   cursor: pointer;
+  display: block;
 }
 .btn-outline:hover{
   background: #52B788;
