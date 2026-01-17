@@ -181,11 +181,20 @@ th:nth-child(4), td:nth-child(4) { width: 40%; }
   text-decoration: none;
   font-weight: 600;
   font-size: 1rem;
+  display: block;
+  margin-bottom: 0.5rem;
 }
 
 .recipe-link:hover {
   color: #40916C;
   text-decoration: underline;
+}
+
+/* ================== RECIPE FEEDBACK ================== */
+.recipe-feedback-wrapper {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
 }
 
 /* ================== SKŁADNIKI ================== */
@@ -333,6 +342,11 @@ td ul li {
     font-size: 1.2rem;
     font-weight: 700;
     color: #2D6A4F;
+  }
+
+  .table-responsive .recipe-feedback-wrapper {
+    justify-content: center;
+    margin-top: 0.75rem;
   }
 
   .table-responsive td.Desc,

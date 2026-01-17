@@ -1,0 +1,141 @@
+<div class="recipe-feedback-container">
+  <!-- Sekcja główna: Lajki i Komentarze -->
+  <div class="feedback-actions">
+
+    <!-- Przycisk Lajka z licznikiem -->
+    <div class="like-section">
+      <button
+        mat-icon-button
+        class="feedback-button like-button"
+        [class.liked]="likeSummary().likedByCurrentUser"
+        [disabled]="isLoadingLikes()"
+        (click)="toggleLike()"
+        [matTooltip]="likeSummary().likedByCurrentUser ? 'Usuń polubienie' : 'Polub przepis'"
+        matTooltipPosition="above">
+
+        @if (isLoadingLikes()) {
+          <mat-spinner [diameter]="getIconSize()" class="spinner-icon"></mat-spinner>
+        } @else {
+          <mat-icon [style.font-size.px]="getIconSize()">
+            {{ likeSummary().likedByCurrentUser ? 'favorite' : 'favorite_border' }}
+          </mat-icon>
+        }
+      </button>
+
+      <!-- Licznik lajków -->
+      <span class="like-count" [class.has-likes]="likeSummary().totalLikes > 0">
+        {{ likeSummary().totalLikes }}
+      </span>
+    </div>
+
+    <!-- Przycisk Komentarzy -->
+    @if (showCommentsButton) {
+      <button
+        mat-icon-button
+        class="feedback-button comment-button"
+        [class.active]="showCommentsSection()"
+        (click)="toggleCommentsSection()"
+        matTooltip="Pokaż komentarze"
+        matTooltipPosition="above">
+        <mat-icon [style.font-size.px]="getIconSize()">
+          {{ showCommentsSection() ? 'comment' : 'comment_outline' }}
+        </mat-icon>
+      </button>
+    }
+  </div>
+
+  <!-- Sekcja komentarzy (rozwijana) -->
+  @if (showCommentsSection()) {
+    <div class="comments-section">
+      <mat-card class="comments-card">
+
+        <!-- Formularz dodawania komentarza -->
+        <div class="add-comment-form">
+          <h3 class="section-title">Dodaj komentarz</h3>
+
+          <mat-form-field appearance="outline" class="comment-input">
+            <mat-label>Twój komentarz (max 500 znaków)</mat-label>
+            <textarea
+              matInput
+              rows="3"
+              maxlength="500"
+              [(ngModel)]="newCommentContent"
+              [disabled]="isSubmittingComment()"
+              placeholder="Podziel się swoją opinią o tym przepisie..."></textarea>
+            <mat-hint align="end">
+              {{ newCommentContent().length }} / 500
+            </mat-hint>
+          </mat-form-field>
+
+          <button
+            mat-raised-button
+            color="primary"
+            [disabled]="isSubmittingComment() || newCommentContent().trim().length === 0"
+            (click)="addComment()"
+            class="submit-comment-btn">
+            @if (isSubmittingComment()) {
+              <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+              Wysyłanie...
+            } @else {
+              <mat-icon>send</mat-icon>
+              Wyślij komentarz
+            }
+          </button>
+        </div>
+
+        <!-- Lista komentarzy -->
+        <div class="comments-list">
+          <h3 class="section-title">
+            Komentarze
+            @if (!isLoadingComments()) {
+              <span class="comments-count">({{ comments().length }})</span>
+            }
+          </h3>
+
+          @if (isLoadingComments()) {
+            <!-- Loading spinner -->
+            <div class="loading-container">
+              <mat-spinner diameter="40"></mat-spinner>
+              <p>Ładowanie komentarzy...</p>
+            </div>
+          } @else if (comments().length === 0) {
+            <!-- Brak komentarzy -->
+            <div class="no-comments">
+              <mat-icon>chat_bubble_outline</mat-icon>
+              <p>Brak komentarzy. Bądź pierwszą osobą, która skomentuje ten przepis!</p>
+            </div>
+          } @else {
+            <!-- Lista komentarzy -->
+            @for (comment of comments(); track comment) {
+              <div class="comment-item">
+                <div class="comment-header">
+                  <div class="comment-author">
+                    <mat-icon class="avatar-icon">account_circle</mat-icon>
+                    <span class="author-name">{{ comment.userName }}</span>
+                  </div>
+                  <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
+                </div>
+                <div class="comment-content">
+                  {{ comment.content }}
+                </div>
+              </div>
+            }
+          }
+        </div>
+
+        <!-- Przycisk usuwania własnego komentarza -->
+        <div class="comment-actions">
+          <button
+            mat-stroked-button
+            color="warn"
+            (click)="deleteComment()"
+            class="delete-comment-btn">
+            <mat-icon>delete</mat-icon>
+            Usuń mój komentarz
+          </button>
+        </div>
+
+      </mat-card>
+    </div>
+  }
+</div>

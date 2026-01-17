@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { RecipeFeedbackComponent } from '../../../shared/components/recipe-feedback/recipe-feedback.component';
 
 function emptyPagedResult<T>(): PagedResult<T> {
   return { items: [], totalPages: 0, itemFrom: 0, itemTo: 0, totalItemsCount: 0 };
@@ -20,7 +21,7 @@ type RecipesMode = { type: 'all' } | { type: 'budget' } | { type: 'canPrepare' }
 
 @Component({
   selector: 'app-recipes-list',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, RecipeFeedbackComponent],
   templateUrl: './recipes-list.html',
   styleUrls: ['./recipes-list.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

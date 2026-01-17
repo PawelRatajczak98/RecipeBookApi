@@ -64,12 +64,15 @@
           <tbody>
             @for (recipe of recipes(); track $index) {
               <tr>
-                <td class="Name" data-label="Nazwa"><a [routerLink]="['/recipes', recipe.id]" class="recipe-link">{{ recipe.name }}</a>
-                  <div class="row">
-                  <span class="icon material-symbols-outlined">thumb_up 20</span>
-                  <span class="icon material-symbols-outlined">chat 30</span>
+                <td class="Name" data-label="Nazwa">
+                  <a [routerLink]="['/recipes', recipe.id]" class="recipe-link">{{ recipe.name }}</a>
+                  <div class="recipe-feedback-wrapper">
+                    <app-recipe-feedback
+                      [recipeId]="recipe.id"
+                      [showCommentsButton]="true"
+                      iconSize="small" />
                   </div>
-              </td>
+                </td>
                 <td class="Desc" data-label="Opis">{{ recipe.description }}</td>
                 <td class="Price" data-label="Cena">{{ recipe.totalCost | currency:'PLN ' }}</td>
                 <td class="Prod" data-label="Produkty">
