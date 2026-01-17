@@ -3,6 +3,7 @@ using Application.DTO.Recipe;
 using Application.DTO.RecipeIngredient;
 using Application.Exceptions;
 using Application.Query;
+using Application.Utilities;
 using Domain.Entities;
 using Domain.Interfaces;
 using Infrastructure.Mappings;
@@ -120,10 +121,13 @@ namespace Infrastructure.Services
 
         public async Task<decimal> CalculateRecipeCostAsync(int recipeId)
         {
-            var totalCost = await _context.RecipeIngredients
+            var recipeIngredients = await _context.RecipeIngredients
                 .Include(ri => ri.Ingredient)
                 .Where(ri => ri.RecipeId == recipeId)
-                .SumAsync(ri => ri.Ingredient.PriceFor100Grams * ((decimal)ri.Quantity / 100));
+                .ToListAsync();
+
+            var totalCost = recipeIngredients.Sum(ri =>
+                IngredientPriceCalculator.CalculatePrice(ri.Ingredient, ri.Quantity, ri.Unit));
 
             return totalCost;
         }

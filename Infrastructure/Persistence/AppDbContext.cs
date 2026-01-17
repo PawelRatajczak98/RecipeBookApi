@@ -50,6 +50,10 @@ namespace Infrastructure.Persistence
                 .Property(i => i.PriceFor100Grams)
                 .HasColumnType("decimal(18,2)");
 
+            modelBuilder.Entity<Ingredient>()
+                .Property(i => i.PriceForSingle)
+                .HasColumnType("decimal(18,2)");
+
             modelBuilder.Entity<RecipeIngredient>()
                 .Property(ui => ui.Quantity)
                 .HasColumnType("decimal(18,2)");

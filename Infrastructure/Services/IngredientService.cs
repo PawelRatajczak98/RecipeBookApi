@@ -54,6 +54,7 @@ namespace Infrastructure.Services
                 Name = dto.Name,
                 Description = dto.Description,
                 PriceFor100Grams = dto.PriceFor100Grams,
+                PriceForSingle = dto.PriceForSingle,
                 Unit = dto.Unit
             };
             await _context.Ingredients.AddAsync(ingredient);
@@ -70,6 +71,7 @@ namespace Infrastructure.Services
             }
             existingIngredient.Description = updatedIngredient.Description;
             existingIngredient.PriceFor100Grams = updatedIngredient.PriceFor100Grams;
+            existingIngredient.PriceForSingle = updatedIngredient.PriceForSingle;
             await _context.SaveChangesAsync();
             return existingIngredient;
         }

@@ -8,6 +8,7 @@ namespace Domain.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal PriceFor100Grams { get; set; }
+        public decimal? PriceForSingle { get; set; }
         public string? Unit { get;set; }
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
         public ICollection<UserIngredient> UserIngredients { get; set; } = new List<UserIngredient>();

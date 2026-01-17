@@ -173,6 +173,9 @@ namespace Infrastructure.Migrations
                     b.Property<decimal>("PriceFor100Grams")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal?>("PriceForSingle")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Unit")
                         .HasColumnType("nvarchar(max)");
 
@@ -243,6 +246,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Instructions")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")

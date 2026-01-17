@@ -1,4 +1,5 @@
 ﻿using Application.DTO.UserIngredient;
+using Application.Utilities;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace Infrastructure.Mappings
                 Quantity = userIngredient.Quantity,
                 IngredientName = userIngredient.Ingredient?.Name,
                 TotalPrice = userIngredient.Ingredient != null
-                    ? userIngredient.Quantity * userIngredient.Ingredient.PriceFor100Grams / 100 
+                    ? IngredientPriceCalculator.CalculatePrice(userIngredient.Ingredient, userIngredient.Quantity, userIngredient.Unit)
                     : 0,
                 Unit = userIngredient.Unit
             };

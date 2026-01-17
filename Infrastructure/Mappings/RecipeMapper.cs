@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Application.DTO.Recipe;
 using Application.DTO.RecipeIngredient;
+using Application.Utilities;
 using Domain.Entities;
 
 namespace Infrastructure.Mappings
@@ -32,14 +33,21 @@ namespace Infrastructure.Mappings
                 TotalTime = dto.PreparationTime + dto.CookingTime,
                 Servings = dto.Servings,
 
-                TotalCost = dto.RecipeIngredientsDto.Sum(ri => 
-                    ingredientsFromDb.FirstOrDefault(i => i.Id == ri.IngredientId)?.PriceFor100Grams * ri.Quantity / 100 ?? 0),
+                TotalCost = dto.RecipeIngredientsDto.Sum(ri =>
+                {
+                    var ingredient = ingredientsFromDb.FirstOrDefault(i => i.Id == ri.IngredientId);
+                    return ingredient != null
+                        ? IngredientPriceCalculator.CalculatePrice(ingredient, ri.Quantity, ri.Unit)
+                        : 0;
+                }),
                 RecipeIngredients = dto.RecipeIngredientsDto.Select(ri =>
                 {
                     var ingredient = ingredientsFromDb.FirstOrDefault(i => i.Id == ri.IngredientId);
                     if (ingredient == null)
                         throw new Exception($"Ingredient with ID {ri.IngredientId} not found");
                    
+
+
                     return new RecipeIngredient
                     {
                         Ingredient = ingredient,

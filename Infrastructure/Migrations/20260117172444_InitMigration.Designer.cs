@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250820235131_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260117172444_InitMigration")]
+    partial class InitMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -176,6 +176,9 @@ namespace Infrastructure.Migrations
                     b.Property<decimal>("PriceFor100Grams")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal?>("PriceForSingle")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Unit")
                         .HasColumnType("nvarchar(max)");
 
@@ -246,6 +249,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Instructions")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
