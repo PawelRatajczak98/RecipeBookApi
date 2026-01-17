@@ -46,7 +46,11 @@ export class RecipeCreate implements OnInit {
   preparationTime = 1;
   cookingTime = 1;
   servings = 1;
-  
+
+  selectedFile: File | null = null;
+  imagePreviewUrl: string | null = null;
+  fileInputError = signal<string | null>(null);
+
   ingredients: Array<{
     ingredientId: number;
     ingredientName: string;
@@ -85,8 +89,46 @@ export class RecipeCreate implements OnInit {
     if (ingredient) {
       this.ingredients[index].ingredientId = ingredient.id;
       this.ingredients[index].ingredientName = ingredient.name;
-      this.ingredients[index].unit = ingredient.unit; 
+      this.ingredients[index].unit = ingredient.unit;
     }
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.fileInputError.set(null);
+
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        this.fileInputError.set('Nieprawidłowy typ pliku. Dozwolone: JPG, PNG, GIF, WEBP');
+        this.selectedFile = null;
+        this.imagePreviewUrl = null;
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        this.fileInputError.set('Plik jest za duży. Maksymalny rozmiar: 5MB');
+        this.selectedFile = null;
+        this.imagePreviewUrl = null;
+        return;
+      }
+
+      this.selectedFile = file;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.imagePreviewUrl = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  removeImage(): void {
+    this.selectedFile = null;
+    this.imagePreviewUrl = null;
+    this.fileInputError.set(null);
   }
 
   private minutesToTimeSpan(minutes: number): string {
@@ -109,7 +151,7 @@ export class RecipeCreate implements OnInit {
       recipeIngredientsDto: this.ingredients.filter(ing => ing.ingredientId > 0)
     };
 
-    this.recipeService.createRecipe(dto).subscribe({
+    this.recipeService.createRecipe(dto, this.selectedFile || undefined).subscribe({
       next: (result) => {
         this.isSubmitting.set(false);
         this.successMessage.set('Przepis został dodany pomyślnie!');
@@ -131,6 +173,9 @@ export class RecipeCreate implements OnInit {
     this.cookingTime = 1;
     this.servings = 1;
     this.ingredients = [];
+    this.selectedFile = null;
+    this.imagePreviewUrl = null;
+    this.fileInputError.set(null);
     this.addIngredient();
   }
 }

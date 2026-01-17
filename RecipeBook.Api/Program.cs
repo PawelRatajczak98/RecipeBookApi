@@ -49,6 +49,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ResponseTimeMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
+
+// Serve static files for uploaded images
+app.UseStaticFiles();
+
 app.UseHttpsRedirection();
 
 app.UseCors("AllowAngular");

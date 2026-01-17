@@ -54,6 +54,41 @@ section h2 {
   margin-top: 2rem;
 }
 
+.image-upload-section {
+  margin: 16px 0;
+}
+
+.file-error {
+  color: #f44336;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.file-error mat-icon {
+  font-size: 20px;
+}
+
+.image-preview {
+  position: relative;
+  margin-top: 16px;
+  max-width: 400px;
+}
+
+.image-preview img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
 .error-message, .success-message {
   display: flex;
   align-items: center;

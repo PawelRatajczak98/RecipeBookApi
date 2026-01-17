@@ -58,8 +58,28 @@ export class RecipeService {
     return this.http.get<RecipeDto>(`${this.apiUrl}/${id}`, { withCredentials: true });
   }
 
-  createRecipe(recipe: RecipeCreateDtoModel): Observable<boolean> {
-    return this.http.post<boolean>(this.apiUrl, recipe, { withCredentials: true });
+  createRecipe(recipe: RecipeCreateDtoModel, imageFile?: File): Observable<boolean> {
+    const formData = new FormData();
+
+    formData.append('name', recipe.name);
+    formData.append('description', recipe.description);
+    formData.append('instructions', recipe.instructions);
+    formData.append('preparationTime', recipe.preparationTime);
+    formData.append('cookingTime', recipe.cookingTime);
+    formData.append('servings', recipe.servings.toString());
+
+    recipe.recipeIngredientsDto.forEach((ingredient, index) => {
+      formData.append(`recipeIngredientsDto[${index}].ingredientId`, ingredient.ingredientId.toString());
+      formData.append(`recipeIngredientsDto[${index}].quantity`, ingredient.quantity.toString());
+      formData.append(`recipeIngredientsDto[${index}].unit`, ingredient.unit);
+      formData.append(`recipeIngredientsDto[${index}].ingredientName`, ingredient.ingredientName);
+    });
+
+    if (imageFile) {
+      formData.append('image', imageFile, imageFile.name);
+    }
+
+    return this.http.post<boolean>(this.apiUrl, formData, { withCredentials: true });
   }
 
   getCheapestRecipeCost(): Observable<number> {

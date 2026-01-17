@@ -1,5 +1,6 @@
 ﻿using Application.DTO.Recipe;
 using Application.Exceptions;
+using Application.Interfaces;
 using Application.Query;
 using Application.Validators;
 using Domain.Entities;
@@ -7,6 +8,7 @@ using Domain.Interfaces;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OperationCanceledException = Application.Exceptions.OperationCanceledException;
 using ValidationException = FluentValidation.ValidationException;
@@ -20,15 +22,22 @@ namespace Api.Controllers
     {
         private readonly IRecipeService _recipeService;
         private readonly IValidator<RecipeCreateDto> _validator;
-        public RecipesController(IValidator<RecipeCreateDto> validator, IRecipeService recipeService)
+        private readonly IFileStorageService _fileStorageService;
+
+        public RecipesController(
+            IValidator<RecipeCreateDto> validator,
+            IRecipeService recipeService,
+            IFileStorageService fileStorageService)
         {
             _recipeService = recipeService;
             _validator = validator;
+            _fileStorageService = fileStorageService;
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Post([FromBody]RecipeCreateDto recipeCreateDto)
+        [RequestSizeLimit(5 * 1024 * 1024)]
+        public async Task<IActionResult> Post([FromForm] RecipeCreateDto recipeCreateDto, IFormFile? image)
         {
             ValidationResult validationResult = await _validator.ValidateAsync(recipeCreateDto);
             if (!validationResult.IsValid)
@@ -36,7 +45,25 @@ namespace Api.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            var isCreated = await _recipeService.CreateAsync(recipeCreateDto);
+            string? imageUrl = null;
+
+            if (image != null)
+            {
+                try
+                {
+                    if (!_fileStorageService.ValidateImageFile(image))
+                        return BadRequest("Nieprawidłowy plik obrazu");
+
+                    var relativePath = await _fileStorageService.SaveFileAsync(image, "");
+                    imageUrl = _fileStorageService.GetFileUrl(relativePath);
+                }
+                catch (Application.Exceptions.ValidationException ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+
+            var isCreated = await _recipeService.CreateAsync(recipeCreateDto, imageUrl);
             return Ok(isCreated);
         }
 

@@ -9,7 +9,7 @@ namespace Domain.Interfaces
     {
         Task<PagedResult<RecipeDto>> GetAllAsync(RecipeQuery recipeQuery);
         Task<RecipeDto> GetByIdAsync(int id);
-        Task<bool> CreateAsync(RecipeCreateDto recipeCreateDto);
+        Task<bool> CreateAsync(RecipeCreateDto recipeCreateDto, string? imageUrl = null);
         Task<bool> UpdateAsync(int id, string description);
         Task<bool> DeleteAsync(int id);
         Task<decimal> CalculateRecipeCostAsync(int recipeId);

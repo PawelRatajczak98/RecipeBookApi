@@ -7,6 +7,12 @@
       </div>
     </header>
 
+    @if (r.imageUrl) {
+      <div class="recipe-image">
+        <img [src]="r.imageUrl" [alt]="r.name" />
+      </div>
+    }
+
     <section class="recipe-description">
       <h2>Opis</h2>
       <p>{{ r.description }}</p>

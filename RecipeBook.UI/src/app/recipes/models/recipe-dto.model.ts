@@ -10,4 +10,5 @@ export interface RecipeDto {
     comments: CommentDto[];
     likes: LikeDto[];
     totalCost: number;
+    imageUrl?: string;
 }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Domain.Interfaces;
+using Application.Interfaces;
 using Infrastructure.Persistence;
 using Infrastructure.Services;
 using System.Text.Json.Serialization;
@@ -45,6 +46,7 @@ namespace Api.Extensions
             services.AddScoped<IUserContextService, UserContextService>();
             services.AddScoped<IBudgetService, BudgetService>();
             services.AddScoped<IRecipeFeedbackService, RecipeFeedbackService>();
+            services.AddScoped<IFileStorageService, FileStorageService>();
             return services;
         }
     }

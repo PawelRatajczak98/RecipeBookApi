@@ -60,6 +60,7 @@ namespace Infrastructure.Mappings
                 Name = recipe.Name,
                 Description = recipe.Description,
                 TotalCost = recipe.TotalCost,
+                ImageUrl = recipe.ImageUrl,
                 LikesCount = recipe.Likes?.Count ?? 0,
                 CommentsCount = recipe.Comments?.Count ?? 0,
                 RecipeIngredients = recipe.RecipeIngredients.Select(ri => new RecipeIngredientDto

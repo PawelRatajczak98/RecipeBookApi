@@ -167,6 +167,18 @@ section h2 {
   font-weight: 600;
 }
 
+/* =================== ZDJĘCIE PRZEPISU =================== */
+.recipe-image {
+  margin: 20px 0;
+}
+
+.recipe-image img {
+  width: 100%;
+  max-width: 600px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
 /* =================== RESPONSYWNOŚĆ =================== */
 @media (max-width: 768px) {
   .recipe-details {

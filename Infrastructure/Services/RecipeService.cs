@@ -64,7 +64,7 @@ namespace Infrastructure.Services
             return RecipeMapper.EntityToDto(recipe);
         }
 
-        public async Task<bool> CreateAsync(RecipeCreateDto recipeCreateDto)
+        public async Task<bool> CreateAsync(RecipeCreateDto recipeCreateDto, string? imageUrl = null)
         {
             if (recipeCreateDto.RecipeIngredientsDto == null || recipeCreateDto.RecipeIngredientsDto.Count == 0)
                 throw new ValidationException("Recipe must contain at least one ingredient.");
@@ -90,6 +90,7 @@ namespace Infrastructure.Services
 
             var recipe = RecipeMapper.DtoToEntity(recipeCreateDto, ingredients);
             recipe.AuthorUserName = userName;
+            recipe.ImageUrl = imageUrl;
 
             _context.Recipes.Add(recipe);
             await _context.SaveChangesAsync();
