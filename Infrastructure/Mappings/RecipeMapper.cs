@@ -45,14 +45,19 @@ namespace Infrastructure.Mappings
                     var ingredient = ingredientsFromDb.FirstOrDefault(i => i.Id == ri.IngredientId);
                     if (ingredient == null)
                         throw new Exception($"Ingredient with ID {ri.IngredientId} not found");
-                   
 
+                    // Automatyczna zmiana "sztuka" na "sztuki" gdy ilość > 1
+                    var unit = ri.Unit;
+                    if (ri.Quantity > 1 && unit?.ToLower()?.Trim() == "sztuka")
+                    {
+                        unit = "sztuki";
+                    }
 
                     return new RecipeIngredient
                     {
                         Ingredient = ingredient,
                         Quantity = ri.Quantity,
-                        Unit = ri.Unit
+                        Unit = unit
                     };
                 }).ToList()
             };

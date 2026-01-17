@@ -36,12 +36,20 @@ namespace Infrastructure.Mappings
         public static UserIngredient MapToEntity(UserIngredientCreateDto dto, string UserId)
         {
             if (dto == null) return null;
+
+            // Automatyczna zmiana "sztuka" na "sztuki" gdy ilość > 1
+            var unit = dto.Unit;
+            if (dto.Quantity > 1 && unit?.ToLower()?.Trim() == "sztuka")
+            {
+                unit = "sztuki";
+            }
+
             return new UserIngredient
             {
                 IngredientId = dto.IngredientId,
                 Quantity = dto.Quantity,
                 UserId = UserId,
-                Unit= dto.Unit,
+                Unit = unit,
                 IngredientName = dto.IngredientName
             };
         }
