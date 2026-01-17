@@ -17,6 +17,13 @@
   gap: 8px;
 }
 
+/* Sekcja komentarza */
+.comment-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* Przyciski feedback */
 .feedback-button {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -73,6 +80,21 @@
 
 .comment-button.active {
   color: #2196f3;
+}
+
+/* Licznik komentarzy */
+.comment-count {
+  font-size: 16px;
+  font-weight: 500;
+  color: #757575;
+  min-width: 30px;
+  text-align: left;
+  transition: color 0.3s ease;
+}
+
+.comment-count.has-comments {
+  color: #2196f3;
+  font-weight: 600;
 }
 
 /* Animacja bicia serca */

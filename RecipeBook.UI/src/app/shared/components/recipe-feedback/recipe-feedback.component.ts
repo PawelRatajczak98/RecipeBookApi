@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, signal } from '@angular/core';
+import { Component, Input, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -41,6 +41,7 @@ export class RecipeFeedbackComponent implements OnInit {
   // Signals for reactive state management (Angular 20 best practice)
   likeSummary = signal<LikeSummaryDto>({ totalLikes: 0, likedByCurrentUser: false });
   comments = signal<CommentDto[]>([]);
+  commentsCount = computed(() => this.comments().length);
   isLoadingLikes = signal(false);
   isLoadingComments = signal(false);
   showCommentsSection = signal(false);

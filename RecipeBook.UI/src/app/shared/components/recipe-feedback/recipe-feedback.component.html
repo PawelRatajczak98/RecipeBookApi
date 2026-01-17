@@ -28,19 +28,26 @@
       </span>
     </div>
 
-    <!-- Przycisk Komentarzy -->
+    <!-- Przycisk Komentarzy z licznikiem -->
     @if (showCommentsButton) {
-      <button
-        mat-icon-button
-        class="feedback-button comment-button"
-        [class.active]="showCommentsSection()"
-        (click)="toggleCommentsSection()"
-        matTooltip="Pokaż komentarze"
-        matTooltipPosition="above">
-        <mat-icon [style.font-size.px]="getIconSize()">
-          {{ showCommentsSection() ? 'comment' : 'comment_outline' }}
-        </mat-icon>
-      </button>
+      <div class="comment-section">
+        <button
+          mat-icon-button
+          class="feedback-button comment-button"
+          [class.active]="showCommentsSection()"
+          (click)="toggleCommentsSection()"
+          matTooltip="Pokaż komentarze"
+          matTooltipPosition="above">
+          <mat-icon [style.font-size.px]="getIconSize()">
+            {{ showCommentsSection() ? 'comment' : 'comment_outline' }}
+          </mat-icon>
+        </button>
+
+        <!-- Licznik komentarzy -->
+        <span class="comment-count" [class.has-comments]="commentsCount() > 0">
+          {{ commentsCount() }}
+        </span>
+      </div>
     }
   </div>
 
