@@ -1,10 +1,10 @@
-import { Component, Input, OnInit, signal, computed } from '@angular/core';
+import { Component, Input, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -13,6 +13,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RecipeFeedbackService } from '../../services/recipe-feedback.service';
 import { CommentDto, CommentCreateDto } from '../../models/comment.model';
 import { LikeSummaryDto } from '../../models/like.model';
+import { UserInfoService } from '../../../user/services/user-info.service';
 
 @Component({
   selector: 'app-recipe-feedback',
@@ -48,10 +49,13 @@ export class RecipeFeedbackComponent implements OnInit {
   newCommentContent = signal('');
   isSubmittingComment = signal(false);
 
+  // User authentication
+  private userInfoService = inject(UserInfoService);
+  isLoggedIn = computed(() => this.userInfoService.currentUser() !== null);
+
   constructor(
     private feedbackService: RecipeFeedbackService,
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {

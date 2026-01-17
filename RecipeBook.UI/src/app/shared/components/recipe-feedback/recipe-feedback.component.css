@@ -51,6 +51,7 @@
 
 .like-button:disabled {
   opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* Licznik lajków */
@@ -80,6 +81,11 @@
 
 .comment-button.active {
   color: #2196f3;
+}
+
+.comment-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* Licznik komentarzy */

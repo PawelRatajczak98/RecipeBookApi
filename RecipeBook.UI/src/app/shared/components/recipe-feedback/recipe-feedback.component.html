@@ -3,51 +3,89 @@
   <div class="feedback-actions">
 
     <!-- Przycisk Lajka z licznikiem -->
-    <div class="like-section">
-      <button
-        mat-icon-button
-        class="feedback-button like-button"
-        [class.liked]="likeSummary().likedByCurrentUser"
-        [disabled]="isLoadingLikes()"
-        (click)="toggleLike()"
-        [matTooltip]="likeSummary().likedByCurrentUser ? 'Usuń polubienie' : 'Polub przepis'"
-        matTooltipPosition="above">
+    @if (isLoggedIn()) {
+      <div class="like-section">
+        <button
+          mat-icon-button
+          class="feedback-button like-button"
+          [class.liked]="likeSummary().likedByCurrentUser"
+          [disabled]="isLoadingLikes()"
+          (click)="toggleLike()"
+          [matTooltip]="likeSummary().likedByCurrentUser ? 'Usuń polubienie' : 'Polub przepis'"
+          matTooltipPosition="above">
 
-        @if (isLoadingLikes()) {
-          <mat-spinner [diameter]="getIconSize()" class="spinner-icon"></mat-spinner>
-        } @else {
-          <mat-icon [style.font-size.px]="getIconSize()">
-            {{ likeSummary().likedByCurrentUser ? 'favorite' : 'favorite_border' }}
-          </mat-icon>
-        }
-      </button>
+          @if (isLoadingLikes()) {
+            <mat-spinner [diameter]="getIconSize()" class="spinner-icon"></mat-spinner>
+          } @else {
+            <mat-icon [style.font-size.px]="getIconSize()">
+              {{ likeSummary().likedByCurrentUser ? 'favorite' : 'favorite_border' }}
+            </mat-icon>
+          }
+        </button>
 
-      <!-- Licznik lajków -->
-      <span class="like-count" [class.has-likes]="likeSummary().totalLikes > 0">
-        {{ likeSummary().totalLikes }}
-      </span>
-    </div>
+        <!-- Licznik lajków -->
+        <span class="like-count" [class.has-likes]="likeSummary().totalLikes > 0">
+          {{ likeSummary().totalLikes }}
+        </span>
+      </div>
+    } @else {
+      <!-- Read-only dla niezalogowanych -->
+      <div class="like-section">
+        <button
+          mat-icon-button
+          class="feedback-button like-button"
+          disabled
+          matTooltip="Zaloguj się, aby polubić"
+          matTooltipPosition="above">
+          <mat-icon [style.font-size.px]="getIconSize()">favorite_border</mat-icon>
+        </button>
+
+        <!-- Licznik lajków -->
+        <span class="like-count" [class.has-likes]="likeSummary().totalLikes > 0">
+          {{ likeSummary().totalLikes }}
+        </span>
+      </div>
+    }
 
     <!-- Przycisk Komentarzy z licznikiem -->
     @if (showCommentsButton) {
-      <div class="comment-section">
-        <button
-          mat-icon-button
-          class="feedback-button comment-button"
-          [class.active]="showCommentsSection()"
-          (click)="toggleCommentsSection()"
-          matTooltip="Pokaż komentarze"
-          matTooltipPosition="above">
-          <mat-icon [style.font-size.px]="getIconSize()">
-            {{ showCommentsSection() ? 'comment' : 'comment_outline' }}
-          </mat-icon>
-        </button>
+      @if (isLoggedIn()) {
+        <div class="comment-section">
+          <button
+            mat-icon-button
+            class="feedback-button comment-button"
+            [class.active]="showCommentsSection()"
+            (click)="toggleCommentsSection()"
+            matTooltip="Pokaż komentarze"
+            matTooltipPosition="above">
+            <mat-icon [style.font-size.px]="getIconSize()">
+              {{ showCommentsSection() ? 'comment' : 'comment_outline' }}
+            </mat-icon>
+          </button>
 
-        <!-- Licznik komentarzy -->
-        <span class="comment-count" [class.has-comments]="commentsCount() > 0">
-          {{ commentsCount() }}
-        </span>
-      </div>
+          <!-- Licznik komentarzy -->
+          <span class="comment-count" [class.has-comments]="commentsCount() > 0">
+            {{ commentsCount() }}
+          </span>
+        </div>
+      } @else {
+        <!-- Read-only dla niezalogowanych -->
+        <div class="comment-section">
+          <button
+            mat-icon-button
+            class="feedback-button comment-button"
+            disabled
+            matTooltip="Zaloguj się, aby komentować"
+            matTooltipPosition="above">
+            <mat-icon [style.font-size.px]="getIconSize()">comment_outline</mat-icon>
+          </button>
+
+          <!-- Licznik komentarzy -->
+          <span class="comment-count" [class.has-comments]="commentsCount() > 0">
+            {{ commentsCount() }}
+          </span>
+        </div>
+      }
     }
   </div>
 
