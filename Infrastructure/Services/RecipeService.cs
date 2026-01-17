@@ -29,7 +29,9 @@ namespace Infrastructure.Services
                 .AsNoTracking()
                 .Where(r => query.SearchPhrase == null || r.Name.ToLower().Contains(query.SearchPhrase.ToLower()))
                 .Include(r => r.RecipeIngredients)
-                .ThenInclude(ri => ri.Ingredient);
+                .ThenInclude(ri => ri.Ingredient)
+                .Include(r => r.Likes)
+                .Include(r => r.Comments);
 
             var recipes = await baseQuery
                 .Skip(query.PageSize * (query.PageNumber - 1))
@@ -145,7 +147,9 @@ namespace Infrastructure.Services
                 .Where(r => r.TotalCost <= budgetToUse)
                 .Where(r => query.SearchPhrase == null || r.Name.ToLower().Contains(query.SearchPhrase.ToLower()))
                 .Include(r => r.RecipeIngredients)
-                .ThenInclude(ri => ri.Ingredient);
+                .ThenInclude(ri => ri.Ingredient)
+                .Include(r => r.Likes)
+                .Include(r => r.Comments);
 
             var totalRecipesCount = await baseQuery.CountAsync();
 
@@ -198,7 +202,9 @@ namespace Infrastructure.Services
                 .Where(r => matchingRecipeIds.Contains(r.Id))
                 .Where(r => query.SearchPhrase == null || r.Name.ToLower().Contains(query.SearchPhrase.ToLower()))
                 .Include(r => r.RecipeIngredients)
-                .ThenInclude(ri => ri.Ingredient);
+                .ThenInclude(ri => ri.Ingredient)
+                .Include(r => r.Likes)
+                .Include(r => r.Comments);
 
             var totalRecipesCount = await baseQuery.CountAsync();
 
@@ -209,7 +215,7 @@ namespace Infrastructure.Services
                 .Select(recipe => RecipeMapper.EntityToDto(recipe))
                 .ToListAsync();
 
-            
+
 
             return new PagedResult<RecipeDto>(pagedRecipes, totalRecipesCount, query.PageSize, query.PageNumber);
         }
@@ -232,6 +238,8 @@ namespace Infrastructure.Services
                 .Where(r => query.SearchPhrase == null || r.Name.ToLower().Contains(query.SearchPhrase.ToLower()))
                 .Include(r => r.RecipeIngredients)
                 .ThenInclude(ri => ri.Ingredient)
+                .Include(r => r.Likes)
+                .Include(r => r.Comments)
                 .OrderBy(r => r.TotalCost);
 
             var totalRecipesCount = await baseQuery.CountAsync();
@@ -244,6 +252,40 @@ namespace Infrastructure.Services
 
             if (!pagedRecipes.Any())
                 throw new ValidationException("Brak przepisów");
+
+            return new PagedResult<RecipeDto>(pagedRecipes, totalRecipesCount, query.PageSize, query.PageNumber);
+        }
+
+        public async Task<PagedResult<RecipeDto>> GetLikedRecipesAsync(RecipeQuery query)
+        {
+            var userId = _userContextService.GetUserId();
+
+            if (userId == null) throw new ValidationException("Brak użytkownika");
+
+            var likedRecipeIds = await _context.Likes
+                .Where(l => l.UserId == userId)
+                .Select(l => l.RecipeId)
+                .ToListAsync();
+
+            if (!likedRecipeIds.Any()) throw new ValidationException("Brak polajkowanych przepisów");
+
+            var baseQuery = _context.Recipes
+                .AsNoTracking()
+                .Where(r => likedRecipeIds.Contains(r.Id))
+                .Where(r => query.SearchPhrase == null || r.Name.ToLower().Contains(query.SearchPhrase.ToLower()))
+                .Include(r => r.RecipeIngredients)
+                .ThenInclude(ri => ri.Ingredient)
+                .Include(r => r.Likes)
+                .Include(r => r.Comments);
+
+            var totalRecipesCount = await baseQuery.CountAsync();
+
+            var pagedRecipes = await baseQuery
+                .OrderBy(r => r.Id)
+                .Skip(query.PageSize * (query.PageNumber - 1))
+                .Take(query.PageSize)
+                .Select(recipe => RecipeMapper.EntityToDto(recipe))
+                .ToListAsync();
 
             return new PagedResult<RecipeDto>(pagedRecipes, totalRecipesCount, query.PageSize, query.PageNumber);
         }

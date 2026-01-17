@@ -17,5 +17,6 @@ namespace Domain.Interfaces
         Task<PagedResult<RecipeDto>> GetRecipesUserCanPrepareAsync(RecipeQuery recipeQuery);
         Task<decimal> GetMinRecipeCostAsync();
         Task<PagedResult<RecipeDto>> GetCheapestRecipesAsync(RecipeQuery recipeQuery);
+        Task<PagedResult<RecipeDto>> GetLikedRecipesAsync(RecipeQuery recipeQuery);
     }
 }

@@ -97,4 +97,16 @@ export class RecipeService {
 
     return this.http.get<PagedResult<RecipeDto>>(`${this.apiUrl}/cheapest-recipes`, { params, withCredentials: true });
   }
+
+  getLikedRecipes(query: RecipeQuery): Observable<PagedResult<RecipeDto>> {
+    let params = new HttpParams()
+      .set('pageNumber', query.pageNumber.toString())
+      .set('pageSize', query.pageSize.toString());
+
+    if (query.searchPhrase) {
+      params = params.set('searchPhrase', query.searchPhrase);
+    }
+
+    return this.http.get<PagedResult<RecipeDto>>(`${this.apiUrl}/liked`, { params, withCredentials: true });
+  }
 }

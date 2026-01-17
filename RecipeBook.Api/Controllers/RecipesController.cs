@@ -162,5 +162,16 @@ namespace Api.Controllers
             var recipes = await _recipeService.GetCheapestRecipesAsync(recipeQuery);
             return Ok(recipes);
         }
+
+        [HttpGet("liked")]
+        [Authorize]
+        public async Task<IActionResult> GetLikedRecipes([FromQuery] RecipeQuery recipeQuery)
+        {
+            if (recipeQuery.PageNumber < 1) recipeQuery.PageNumber = 1;
+            if (recipeQuery.PageSize <= 0) recipeQuery.PageSize = 10;
+
+            var recipes = await _recipeService.GetLikedRecipesAsync(recipeQuery);
+            return Ok(recipes);
+        }
     }
 }

@@ -17,7 +17,7 @@ function emptyPagedResult<T>(): PagedResult<T> {
   return { items: [], totalPages: 0, itemFrom: 0, itemTo: 0, totalItemsCount: 0 };
 }
 
-type RecipesMode = { type: 'all' } | { type: 'budget' } | { type: 'canPrepare' } | { type: 'cheapest' };
+type RecipesMode = { type: 'all' } | { type: 'budget' } | { type: 'canPrepare' } | { type: 'cheapest' } | { type: 'liked' };
 
 @Component({
   selector: 'app-recipes-list',
@@ -95,6 +95,11 @@ recipesResult = toSignal(
         request$ = this.recipeService.getRecipesUserCanPrepare(userId, query);
       } else if (mode.type === 'cheapest') {
         request$ = this.recipeService.getCheapestRecipes(query);
+      } else if (mode.type === 'liked') {
+        if (!userId) {
+          return of(emptyPagedResult<RecipeDto>());
+        }
+        request$ = this.recipeService.getLikedRecipes(query);
       } else {
         request$ = this.recipeService.getRecipes(query);
       }
@@ -148,6 +153,11 @@ recipesResult = toSignal(
 
   onShowCheapest(): void {
     this.mode.set({ type: 'cheapest' });
+    this.query.update(q => ({ ...q, pageNumber: 1 }));
+  }
+
+  onShowLiked(): void {
+    this.mode.set({ type: 'liked' });
     this.query.update(q => ({ ...q, pageNumber: 1 }));
   }
 

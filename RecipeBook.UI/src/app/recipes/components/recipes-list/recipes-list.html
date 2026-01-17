@@ -41,6 +41,7 @@
       <div class="actions-row">
         <button class="btn-secondary" (click)="onGetCanPrepare()">Pokaż możliwe do przygotowania</button>
         <button class="btn-secondary" (click)="onShowCheapest()">Pokaż najtańsze</button>
+        <button class="btn-secondary" (click)="onShowLiked()">Pokaż polajkowane</button>
         <button class="btn-outline" (click)="onShowAll()">Pokaż wszystkie</button>
       </div>
     } @else {
@@ -56,7 +57,7 @@
   <div class="content mt-4">
     @if (recipes().length > 0) {
       <div class="row g-4 recipe-grid">
-        @for (recipe of recipes(); track $index) {
+        @for (recipe of recipes(); track recipe.id) {
           <div class="col-12 col-md-6 col-lg-4">
 
             <div class="card h-100 recipe-card">
