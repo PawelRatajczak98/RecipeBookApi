@@ -161,6 +161,8 @@ namespace Infrastructure.Services
         public async Task<PagedResult<RecipeDto>> GetRecipesUserCanPrepareAsync(RecipeQuery query)
         {
             var userId = _userContextService.GetUserId();
+            
+            if (userId == null) throw new ValidationException("Brak użytkownika");
 
             var matchingRecipeIds = await _context.RecipeIngredients
                 .GroupJoin(

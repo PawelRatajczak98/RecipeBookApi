@@ -9,6 +9,7 @@ export class UserInfoService{
     constructor() {}
 
     public setUser(user : UserDtoModel): void {
+        console.log('Dane użytkownika otrzymane z backendu:', user);
         this.currentUser.set(user);
     }
 
