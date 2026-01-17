@@ -1,14 +1,15 @@
-import { Component, inject, ChangeDetectionStrategy, computed } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
 import { RecipeDto } from '../../models/recipe-dto.model';
 import { RecipeService } from '../../services/recipe.service';
+import { RecipeFeedbackComponent } from '../../../shared/components/recipe-feedback/recipe-feedback.component';
 
 @Component({
   selector: 'app-recipe-details',
-  imports: [CommonModule],
+  imports: [CommonModule, RecipeFeedbackComponent],
   templateUrl: './recipe-details.html',
   styleUrl: './recipe-details.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -22,7 +23,4 @@ export class RecipeDetails {
       switchMap(params => this.recipeService.getRecipeById(+params['id']))
     )
   );
-  
-  likesCount = computed(() => this.recipe()?.likes.length ?? 0);
-  commentsCount = computed(() => this.recipe()?.comments.length ?? 0);
 }

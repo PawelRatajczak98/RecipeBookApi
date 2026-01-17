@@ -4,8 +4,6 @@
       <h1>{{ r.name }}</h1>
       <div class="recipe-stats">
         <span class="total-cost">Koszt całkowity: {{ r.totalCost | currency:'PLN ':'symbol':'1.2-2' }}</span>
-        <span class="likes-count">Polubień: {{ likesCount() }}</span>
-        <span class="comments-count">Komentarzy: {{ commentsCount() }}</span>
       </div>
     </header>
 
@@ -30,36 +28,12 @@
       }
     </section>
 
-    <section class="recipe-likes">
-      <h2>Polubienia</h2>
-      @if (r.likes.length > 0) {
-        <ul class="likes-list">
-          @for (like of r.likes; track like.UserName) {
-            <li class="like-item">{{ like.UserName }}</li>
-          }
-        </ul>
-      } @else {
-        <p class="no-data">Brak polubień</p>
-      }
-    </section>
-
-    <section class="recipe-comments">
-      <h2>Komentarze</h2>
-      @if (r.comments.length > 0) {
-        <div class="comments-list">
-          @for (comment of r.comments; track $index) {
-            <div class="comment-item">
-              <div class="comment-header">
-                <span class="comment-author">{{ comment.UserName }}</span>
-                <span class="comment-date">{{ comment.CreatedAt | date:'short' }}</span>
-              </div>
-              <p class="comment-content">{{ comment.Content }}</p>
-            </div>
-          }
-        </div>
-      } @else {
-        <p class="no-data">Brak komentarzy</p>
-      }
+    <section class="recipe-feedback-section">
+      <h2>Lajki i Komentarze</h2>
+      <app-recipe-feedback
+        [recipeId]="r.id"
+        [showCommentsButton]="true"
+        iconSize="medium" />
     </section>
   </div>
 } @else {

@@ -146,10 +146,46 @@ section h2 {
   border-radius: 10px;
 }
 
+/* =================== SEKCJA FEEDBACK =================== */
+.recipe-feedback-section {
+  background: #F1FAF4;
+  border: 2px solid #B7E4C7;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.recipe-feedback-section h2 {
+  margin-bottom: 1.5rem;
+}
+
 /* =================== ŁADOWANIE =================== */
 .recipe-loading {
   text-align: center;
   padding: 4rem;
   color: #2D6A4F;
   font-weight: 600;
+}
+
+/* =================== RESPONSYWNOŚĆ =================== */
+@media (max-width: 768px) {
+  .recipe-details {
+    padding: 1rem;
+  }
+
+  .recipe-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .recipe-stats {
+    font-size: 0.85rem;
+  }
+
+  section h2 {
+    font-size: 1.2rem;
+  }
+
+  .recipe-feedback-section {
+    padding: 1rem;
+  }
 }
