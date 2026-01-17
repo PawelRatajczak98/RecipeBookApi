@@ -57,11 +57,12 @@ namespace Infrastructure.Services
             var user = await _dbContext.Users.FindAsync(userId);
             if (user == null)
             {
-                throw new DirectoryNotFoundException("User not found");
+                throw new KeyNotFoundException("User not found");
             }
             
             return new UserDto
             {
+                UserId = user.Id,
                 Budget = user.Budget,
                 UserName = user.UserName,
             };

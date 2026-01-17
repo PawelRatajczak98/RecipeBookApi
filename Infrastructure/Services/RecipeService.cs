@@ -186,6 +186,9 @@ namespace Infrastructure.Services
                 .Select(x => x.RecipeId)
                 .ToListAsync();
 
+            if (!matchingRecipeIds.Any()) throw new ValidationException("Brak pasujących przepisów");
+
+
             var baseQuery = _context.Recipes
                 .AsNoTracking()
                 .Where(r => matchingRecipeIds.Contains(r.Id))
@@ -202,11 +205,11 @@ namespace Infrastructure.Services
                 .Select(recipe => RecipeMapper.EntityToDto(recipe))
                 .ToListAsync();
 
-            if (!pagedRecipes.Any())
-                throw new ValidationException("No recipes found that can be prepared with available ingredients.");
+            
 
             return new PagedResult<RecipeDto>(pagedRecipes, totalRecipesCount, query.PageSize, query.PageNumber);
         }
+
         public async Task<decimal> GetCheapestRecipeCostAsync()
         {
             var cheapest = await _context.Recipes
