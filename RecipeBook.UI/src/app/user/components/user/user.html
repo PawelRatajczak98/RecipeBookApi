@@ -5,7 +5,41 @@
     <h1 class="hello">Witaj, {{ user.userName }}!</h1>
 
     <div class="budget-card">
-      Twój budżet: {{ userBudget() | currency:'PLN ' }}
+      @if (!isEditingBudget()) {
+        <div class="budget-display" (click)="startEditingBudget()">
+          <span class="budget-label">Twój budżet:</span>
+          <span class="budget-value">{{ userBudget() | currency:'PLN ' }}</span>
+          <span class="edit-hint">✏️ Kliknij aby edytować</span>
+        </div>
+      } @else {
+        <div class="budget-edit">
+          <label class="budget-label">Nowy budżet:</label>
+          <input
+            type="number"
+            class="budget-input"
+            [ngModel]="editedBudgetValue()"
+            (ngModelChange)="editedBudgetValue.set($event)"
+            [disabled]="isSavingBudget()"
+            min="0"
+            step="0.01"
+            placeholder="Wpisz nowy budżet" />
+
+          <div class="budget-buttons">
+            <button
+              class="btn-accept"
+              (click)="saveBudget()"
+              [disabled]="isSavingBudget()">
+              {{ isSavingBudget() ? 'Zapisywanie...' : 'Akceptuj' }}
+            </button>
+            <button
+              class="btn-cancel"
+              (click)="cancelEditingBudget()"
+              [disabled]="isSavingBudget()">
+              Anuluj
+            </button>
+          </div>
+        </div>
+      }
     </div>
 
     <ng-container *ngIf="userIngredients().length; else noIngredients">

@@ -12,5 +12,6 @@ namespace Domain.Interfaces
             Task<bool> IncreaseBudgetAsync(decimal amount);
             Task<bool> DecreaseBudgetAsync(decimal amount);
             Task<decimal?> GetBudgetAsync();
+            Task<bool>  SetBudgetAsync(decimal amount);
     }
 }

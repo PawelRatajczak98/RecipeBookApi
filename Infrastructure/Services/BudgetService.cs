@@ -68,6 +68,25 @@ namespace Infrastructure.Services
             return budget.HasValue ? budget.Value : 0;
         }
 
-        
+       public async Task <bool> SetBudgetAsync(decimal amount)
+        {
+            if (amount < 0)
+            {
+                throw new ValidationException("Wartość powinna być większa od 0");
+            }
+
+            var userId = _userContextService.GetUserId();
+            var user = await _context.Users.FindAsync(userId);
+
+            if (user == null)
+            {
+                throw new UnauthorizedException("Nie znaleziono użytkownika");
+            }
+
+            user.Budget = amount;
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

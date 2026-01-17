@@ -9,14 +9,18 @@ import { UserIngredientUpdateDto } from "../models/user-ingredient-dto-update.mo
 @Injectable({ providedIn: 'root' })
 export class UserIngredientsService {
   private baseUrl = 'https://localhost:7090/api/useringredients';
+  private budgetUrl = 'https://localhost:7090/api/budget';
   private http = inject(HttpClient);
 
   // sygnał z listą składników użytkownika
   userIngredients = signal<UserIngredientDtoModel[]>([]);
 
-  // computed sumujący budżet
+  // sygnał z budżetem użytkownika
+  private budget = signal<number>(0);
+
+  // zwraca aktualny budżet
   getCurrentBudget = computed(() => {
-    return this.userIngredients().reduce((sum, ing) => sum + (ing.totalPrice ?? 0), 0);
+    return this.budget();
   });
 
   // ustawia listę składników (np. po pobraniu z backendu)
@@ -29,11 +33,21 @@ export class UserIngredientsService {
     return this.http.get<UserIngredientDtoModel[]>(`${this.baseUrl}`, { withCredentials: true });
   }
 
-  // odświeżenie listy składników – wywołanie przy logowaniu
+  // pobranie budżetu z backendu
+  getBudget(): Observable<number> {
+    return this.http.get<number>(`${this.budgetUrl}/budget`, { withCredentials: true });
+  }
+
+  // odświeżenie listy składników i budżetu – wywołanie przy logowaniu
   refreshUserIngredients() {
     this.getUserIngredients().subscribe({
       next: list => this.userIngredients.set(list),
       error: () => console.error('Nie udało się pobrać składników użytkownika')
+    });
+
+    this.getBudget().subscribe({
+      next: budget => this.budget.set(budget),
+      error: () => console.error('Nie udało się pobrać budżetu użytkownika')
     });
   }
 

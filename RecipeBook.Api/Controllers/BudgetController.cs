@@ -38,6 +38,13 @@ namespace Api.Controllers
             var budget = await _budgetService.DecreaseBudgetAsync(amount);
             return Ok(budget);
         }
-       
+
+        [HttpPut("setBudget")]
+        public async Task<IActionResult> SetBudget([FromBody] decimal amount)
+        {
+            var budget = await _budgetService.SetBudgetAsync(amount);
+            return Ok(budget);
+        }
+
     }
 }
