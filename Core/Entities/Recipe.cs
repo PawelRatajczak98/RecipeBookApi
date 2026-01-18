@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Domain.Entities
+﻿namespace Domain.Entities
 {
     public class Recipe
     {
@@ -13,9 +11,7 @@ namespace Domain.Entities
         public ICollection<Like> Likes { get; set; } = new List<Like>();
         public decimal TotalCost { get; set; } = 0m;
         public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
-        public decimal AverageRating =>
-            Ratings.Count > 0 ? Math.Round(Ratings.Average(r =>(decimal) r.Value), 2) : 0m;
-
+        public decimal AverageRating { get; set; } = 0m;
         public string Instructions { get; set; }
         public TimeSpan PreparationTime { get; set; }
         public TimeSpan CookingTime { get; set; }
